@@ -56,6 +56,12 @@ report for more details on the SASI sensing board and hardware files.
 See the [TIDA-010941](https://www.ti.com/tool/TIDA-010941) reference design
 report for power consumption measurements.
 
+
+### Device Migration Recommendations
+This project was developed for a superset device included in the LP_MSPM0L1306 LaunchPad. Please
+visit the [CCS User's Guide](https://software-dl.ti.com/msp430/esd/MSPM0-SDK/latest/docs/english/tools/ccs_ide_guide/doc_guide/doc_guide-srcs/ccs_ide_guide.html#non-sysconfig-compatible-project-migration)
+for information about migrating to other MSPM0 devices.
+
 ## Example Usage
 
 This example is provided in association with the [TIDA-010941](https://www.ti.com/tool/TIDA-010941).
