@@ -183,7 +183,7 @@ typedef struct
     /*! @brief Voltage product  */
     int64_t voltageSq;
     /*! @brief Fundamental voltage product  */
-    int64_t fVoltgaeSq;
+    int64_t fVoltageSq;
     /*! @brief Sample count  */
     uint32_t sampleCount;
     /*! @brief Cycles count  */
@@ -250,7 +250,7 @@ typedef struct
     /*! @brief voltage history array index  */
     int8_t vHistoryIndex;
     /*! @brief Angle of a pure sin wave  */
-    int32_t purePhase;
+    uint32_t purePhase;
     /*! @brief Rate of change of angle in pure sin wave per sample  */
     _iq23 purePhaseRate;
     /*! @brief dot product of voltage and pure wave  */
@@ -332,7 +332,7 @@ typedef struct
 typedef struct
 {
     /*! @brief Energy integrated per sample */
-    _iq13 integrator;
+    uint64_t integrator;
     /*! @brief pulse remaining time */
     uint8_t pulseRemainingTime;
 }energyPulse;

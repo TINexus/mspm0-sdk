@@ -68,7 +68,6 @@ void Metrology_initializeCalibrationData()
     {
         Metrology_setDefaultCalibrationData();
     }
-
 }
 
 /*!
@@ -187,9 +186,9 @@ int32_t Metrology_getPhaseFundIOffset(metrologyData *workingData, PHASES ph)
  * @param[in] ph          The phase number
  * @return Phase correction parameters
  */
-int32_t Metrology_getPhaseCorrectionParameters(metrologyData *workingData, PHASES ph)
+int16_t Metrology_getPhaseCorrectionParameters(metrologyData *workingData, PHASES ph)
 {
-    return calInfo->phases[ph].current.phaseOffset;
+    return (int16_t)(calInfo->phases[ph].current.phaseOffset << 3);
 }
 
 /*!
@@ -338,7 +337,7 @@ uint32_t Metrology_getNeutralPScaling(metrologyData *workingData)
  */
 int16_t Metrology_getNeutralCorrectionParameters(metrologyData *workingData)
 {
-    return (int16_t)calInfo->neutral.phaseOffset;
+    return (int16_t)(calInfo->neutral.phaseOffset << 3);
 }
 
 /*!
@@ -511,9 +510,9 @@ void Metrology_setPhaseQOffset(metrologyData *workingData, int32_t data, PHASES 
  * @param[in] data        The phase calibration offset
  * @param[in] ph          The phase number
  */
-void Metrology_setPhaseOffset(metrologyData *workingData, int32_t data, PHASES ph)
+void Metrology_setPhaseOffset(metrologyData *workingData, int16_t data, PHASES ph)
 {
-    updatedData.phases[ph].current.phaseOffset = data;
+    updatedData.phases[ph].current.phaseOffset = (int32_t)(data >> 3);
 }
 
 /*!
@@ -613,7 +612,7 @@ void Metrology_setNeutralQOffset(metrologyData *workingData, int32_t data)
  */
 void Metrology_setNeutralOffset(metrologyData *workingData, int16_t data)
 {
-    updatedData.neutral.phaseOffset = data;
+    updatedData.neutral.phaseOffset = (int32_t)(data >> 3);
 }
 
 /*!

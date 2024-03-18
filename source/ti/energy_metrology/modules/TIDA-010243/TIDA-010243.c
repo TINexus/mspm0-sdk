@@ -111,8 +111,9 @@ void TIDA_updateINT1(TIDA_instance *tidaHandle, uint16_t eventData, EVENTS1 even
  * @param[in] tidaHandle   The TIDA Instance
  * @param[in] workingData  The Metrology Data
  * @param[in] adsHandle    The ADS handle
+ * @param[in] dlt645       The dlt645 buffer
  */
-void TIDA_init(TIDA_instance *tidaHandle, metrologyData *workingData, ADS_Instance *adsHandle)
+void TIDA_init(TIDA_instance *tidaHandle, metrologyData *workingData, ADS_Instance *adsHandle, DLT645Buf *dlt645)
 {
     adsHandle->ready            = HAL_GPIO_IN_00;
     adsHandle->sync             = HAL_GPIO_OUT_00;
@@ -120,6 +121,8 @@ void TIDA_init(TIDA_instance *tidaHandle, metrologyData *workingData, ADS_Instan
     adsHandle->spiCs            = HAL_SPI_CS_0;
     adsHandle->crcEnable        = ADS_CRC_ENABLE;
     adsHandle->crcType          = ADS_CRC_TYPE_CCITT;
+
+    gDLT645.uartChan            = HAL_UART_CHAN_0;
 
     workingData->activePulse    = HAL_GPIO_OUT_02;
     workingData->reactivePulse  = HAL_GPIO_OUT_03;
@@ -176,6 +179,8 @@ void TIDA_init(TIDA_instance *tidaHandle, metrologyData *workingData, ADS_Instan
 
     tidaHandle->intr0Status    = 0x0;
     tidaHandle->intr1Status    = 0x0;
+
+    DLT645_UARTRxdmaInit(dlt645);
 }
 
 /*!
@@ -226,9 +231,10 @@ void TIDA_calculateMetrologyParameters(TIDA_instance *tidaHandle, metrologyData 
         }
     }
 
-    if(phaseLog == 0x07)
+    if(phaseLog == THREE_PHASE_LOG_DONE)
     {
        Metrology_calculateThreePhaseParameters(workingData);
+       Metrology_calculateTotalParameters(workingData);
        TIDA_updateINT0(tidaHandle, workingData->totals.readings.activePower, TOTAL_ACTIVE_POWER_NEGATIVE);
        TIDA_updateINT0(tidaHandle, workingData->totals.readings.reactivePower, TOTAL_REACTIVE_POWER_NEGATIVE);
        phaseLog = 0;

@@ -118,6 +118,8 @@ typedef struct
     int8_t rxPending;
     /*! @brief GPIO out to enable RS485 */
     HAL_GPIO_OUT  RS485EN;
+    /*! @brief HAL UART channel used to communicate with GUI. */
+    HAL_UART_CHAN  uartChan;
 }DLT645Buf;
 
 /*! @enum DLT645_STATUS */
@@ -267,6 +269,12 @@ typedef enum
 }METER_CONFIG_2;
 
 /*!
+ * @brief DLT645 UART receive DMA init
+ * @param[in] dlt645      The DLT645 instance
+ */
+void DLT645_UARTRxdmaInit(DLT645Buf *dlt645);
+
+/*!
  * @brief DLT645 service
  * @param[in] workingData The metrology instance
  * @param[in] dlt645      The DLT645 instance
@@ -283,9 +291,8 @@ void DLT645_rxByte(DLT645Buf *dlt645, uint8_t ch);
 /*!
  * @brief Read UART receive byte
  * @param[in] dlt645 The dlt645 instance
- * @param[in] rxChar Received byte through UART
  */
-void DLT645_UARTRxByte(DLT645Buf *dlt645, uint8_t rxChar);
+void DLT645_UARTRxByte(DLT645Buf *dlt645);
 
 /*!
  * @brief Get UART transmit byte

@@ -56,6 +56,11 @@ HAL_SPIInstance     SPIChannel[HAL_SPI_CHAN_MAX];
 DL_SPI_CHIP_SELECT  SPICS[HAL_SPI_CS_MAX];
 
 /*!
+ * @brief Array for storing the UART instances
+ */
+HAL_UARTInstance    UARTChannel[HAL_UART_CHAN_MAX];
+
+/*!
  * @brief  Initializes the hal module
  */
 void HAL_init()
@@ -68,6 +73,10 @@ void HAL_init()
     SPICS[HAL_SPI_CS_1] = DL_SPI_CHIP_SELECT_1;
     SPICS[HAL_SPI_CS_2] = DL_SPI_CHIP_SELECT_2;
     SPICS[HAL_SPI_CS_3] = DL_SPI_CHIP_SELECT_3;
+
+    UARTChannel[HAL_UART_CHAN_0].inst            = UART_0_INST;
+    UARTChannel[HAL_UART_CHAN_0].dmaChanIdRx     = DMA_CH2_CHAN_ID;
+    UARTChannel[HAL_UART_CHAN_0].dmaChanIdTx     = DMA_CH3_CHAN_ID;
 
     /* Define GPIO output array */
     gpioOutputPin[HAL_GPIO_OUT_00].iomux  = GEN_GPIO_OUT_PINO_01_IOMUX;
@@ -99,6 +108,20 @@ void HAL_init()
     gpioInputPin[HAL_GPIO_IN_01].port     = GEN_GPIO_IN_PINI_02_PORT;
     gpioInputPin[HAL_GPIO_IN_01].pin      = GEN_GPIO_IN_PINI_02_PIN;
     gpioInputPin[HAL_GPIO_IN_01].IRQn     = GEN_GPIO_IN_INT_IRQN;
+#endif
+
+#ifdef GEN_GPIO_IN_PINI_03_PIN
+    gpioInputPin[HAL_GPIO_IN_02].iomux    = GEN_GPIO_IN_PINI_03_IOMUX;
+    gpioInputPin[HAL_GPIO_IN_02].port     = GEN_GPIO_IN_PINI_03_PORT;
+    gpioInputPin[HAL_GPIO_IN_02].pin      = GEN_GPIO_IN_PINI_03_PIN;
+    gpioInputPin[HAL_GPIO_IN_02].IRQn     = GEN_GPIO_IN_INT_IRQN;
+#endif
+
+#ifdef GEN_GPIO_IN_PINI_04_PIN
+    gpioInputPin[HAL_GPIO_IN_03].iomux    = GEN_GPIO_IN_PINI_04_IOMUX;
+    gpioInputPin[HAL_GPIO_IN_03].port     = GEN_GPIO_IN_PINI_04_PORT;
+    gpioInputPin[HAL_GPIO_IN_03].pin      = GEN_GPIO_IN_PINI_04_PIN;
+    gpioInputPin[HAL_GPIO_IN_03].IRQn     = GEN_GPIO_IN_INT_IRQN;
 #endif
 }
 
@@ -144,6 +167,25 @@ void HAL_enableGPIOInterrupt(HAL_GPIO_IN pin)
 }
 
 /*!
+ * @brief     get gpio enabled interrupt status
+ * @param[in] pin       gpiopin
+ * @return gpio interrupt status
+ */
+uint32_t HAL_getGPIOEnabledInterruptStatus(HAL_GPIO_IN pin)
+{
+    return DL_GPIO_getEnabledInterruptStatus(gpioInputPin[pin].port, gpioInputPin[pin].pin);
+}
+
+/*!
+ * @brief     clear gpio interrupt status
+ * @param[in] pin       gpiopin
+ */
+void HAL_clearGPIOInterruptStatus(HAL_GPIO_IN pin)
+{
+    DL_GPIO_clearInterruptStatus(gpioInputPin[pin].port, gpioInputPin[pin].pin);
+}
+
+/*!
  * @brief Start SPI data transfer through DMA
  * @param[in]  dataTx[]  The transfer data
  * @param[in]  dataRx[]  The receive data
@@ -169,6 +211,40 @@ void HAL_startSPIDataTransfer(uint8_t dataTx[], uint8_t dataRx[], uint8_t byteLe
 
     DL_SYSCTL_disableSleepOnExit();
 
+    DL_DMA_enableChannel(DMA, dmaTxId);
+}
+
+/*!
+ * @brief Start UART Receive DMA
+ * @param[in] chan       The UART channel
+ * @param[in] dataRx[]   Array to store received data
+ * @param[in] byteLength Number of bytes transfered
+ */
+void HAL_startUARTDMARecieve(HAL_UART_CHAN chan, uint8_t dataRx[], uint8_t byteLength)
+{
+    UART_Regs *uart = UARTChannel[chan].inst;
+    uint8_t dmaRxId = UARTChannel[chan].dmaChanIdRx;
+
+    DL_DMA_setSrcAddr(DMA, dmaRxId, (uint32_t) &uart->RXDATA);
+    DL_DMA_setDestAddr(DMA, dmaRxId, (uint32_t) &dataRx[0]);
+    DL_DMA_setTransferSize(DMA, dmaRxId, byteLength);
+    DL_DMA_enableChannel(DMA, dmaRxId);
+}
+
+/*!
+ * @brief Start UART Transmit DMA
+ * @param[in] chan       The UART channel
+ * @param[in] dataTx[]   The transmit data
+ * @param[in] byteLength Number of bytes to transfer
+ */
+void HAL_startUARTDMATransmit(HAL_UART_CHAN chan, uint8_t dataTx[], uint8_t byteLength)
+{
+    UART_Regs *uart = UARTChannel[chan].inst;
+    uint8_t dmaTxId = UARTChannel[chan].dmaChanIdTx;
+
+    DL_DMA_setSrcAddr(DMA, dmaTxId, (uint32_t) &dataTx[0]);
+    DL_DMA_setDestAddr(DMA, dmaTxId, (uint32_t) &uart->TXDATA);
+    DL_DMA_setTransferSize(DMA, dmaTxId, byteLength);
     DL_DMA_enableChannel(DMA, dmaTxId);
 }
 
@@ -245,15 +321,14 @@ int HAL_copyMemoryBlock(void *dstAddr, void *srcAddr, int len, HAL_MEMORY_BLOCK_
  */
 void HAL_getRTC(uint8_t buf[6])
 {
-    DL_RTC_Calendar RTC_values;
-    RTC_values = DL_RTC_getCalendarTime(RTC);
-    buf[0]     = RTC_values.seconds;
-    buf[1]     = RTC_values.minutes;
-    buf[2]     = RTC_values.hours;
-    buf[3]     = RTC_values.dayOfWeek;
-    buf[4]     = RTC_values.dayOfMonth;
-    buf[5]     = RTC_values.month;
-    buf[6]     = RTC_values.year;
+    DL_RTC_Calendar RTCValues;
+    RTCValues = DL_RTC_getCalendarTime(RTC);
+    buf[0]     = RTCValues.year;
+    buf[1]     = RTCValues.month;
+    buf[2]     = RTCValues.dayOfMonth;
+    buf[3]     = RTCValues.hours;
+    buf[4]     = RTCValues.minutes;
+    buf[5]     = RTCValues.seconds;
 }
 
 /*!
@@ -262,16 +337,15 @@ void HAL_getRTC(uint8_t buf[6])
  */
 void HAL_setRTC(const uint8_t buf[6])
 {
-    DL_RTC_Calendar new_time;
-    new_time.year       = buf[6];
-    new_time.month      = buf[5];
-    new_time.dayOfMonth = buf[4];
-    new_time.dayOfWeek  = buf[3];
-    new_time.hours      = buf[2];
-    new_time.minutes    = buf[1];
-    new_time.seconds    = buf[0];
+    DL_RTC_Calendar newTime;
+    newTime.year       = buf[0];
+    newTime.month      = buf[1];
+    newTime.dayOfMonth = buf[2];
+    newTime.hours      = buf[3];
+    newTime.minutes    = buf[4];
+    newTime.seconds    = buf[5];
 
-    DL_RTC_initCalendar(RTC, new_time, DL_RTC_FORMAT_BINARY);
+    DL_RTC_initCalendar(RTC, newTime, DL_RTC_FORMAT_BINARY);
     DL_RTC_setOffsetCalibrationFrequency(RTC, RTC_CAL_RTCCALFX_F1HZ );
     DL_RTC_setOffsetCalibrationAdjValue(RTC, DL_RTC_OFFSET_CALIBRATION_SIGN_DOWN, 0);
     DL_RTC_enableInterrupt(RTC, DL_RTC_INTERRUPT_READY);

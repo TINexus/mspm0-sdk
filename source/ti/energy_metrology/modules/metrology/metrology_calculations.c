@@ -45,14 +45,11 @@
 
 /*!
  * @brief isqrt64()
- *          64-bit Square root function
- *
+ *        64-bit Square root function
  * @param[in]  h value
- *
  * @return square root of input value in Q32 format
- *
  */
-uint64_t isqrt64( uint64_t h )
+uint64_t isqrt64(uint64_t h)
 {
     uint64_t x = 0;
     uint64_t y = 0;
@@ -60,7 +57,8 @@ uint64_t isqrt64( uint64_t h )
     /* The answer is calculated as a 64 bit value, where the last
        32 bits are fractional.
        Calling with negative numbers is not a good idea :-) */
-    for (i = 0;  i < 64;  i++) {
+    for (i = 0;  i < 64;  i++)
+    {
         x = (x << 1) | 1;
         if (y < x)
             x -= 2;
@@ -260,7 +258,7 @@ _iq13 calculateReactivePower(phaseMetrology *phase, phaseCalibrationData *phaseC
     {
         int64_t reactpower = current->reactivePower/ current->sampleCount;
         reactpower >>= 13;
-        int64_t scaling = ((int64_t)phaseCal->current.PscaleFactor * phase->params.current.phaseCorrection.firGain) >> 14;
+        int64_t scaling = ((int64_t)phaseCal->current.PscaleFactor * phase->params.current.quadratureCorrection.firGain) >> 14;
         reactivePower = (reactpower * scaling) >> 30;
     }
     return reactivePower;
@@ -302,8 +300,8 @@ _iq19 calculateFundamentalRMSVoltage(phaseMetrology *phase, phaseCalibrationData
     }
     else
     {
-        int64_t fVoltage = voltage->fVoltgaeSq/voltage->sampleCount;
-        int64_t scaling = ((int64_t)phaseCal->VscaleFactor)>>13;
+        int64_t fVoltage = voltage->fVoltageSq/voltage->sampleCount;
+        int64_t scaling = ((int64_t)phaseCal->VscaleFactor * phase->params.current.phaseCorrection.firGain)>>27;
         FRMSVoltage = (fVoltage * scaling) >> 32;
         FRMSVoltage = _IQ19div(FRMSVoltage, _IQ19sqrt(_IQ19(2)));
 
@@ -390,9 +388,10 @@ _iq13 calculateFundamentalActivePower(phaseMetrology *phase, phaseCalibrationDat
     {
         int64_t factpower = current->FActivePower/current->sampleCount;
         factpower >>= 12;
-        int64_t scaling1 = (phase->params.dotProd[dp].fVoltgaeSq/phase->params.current.dotProd[dp].sampleCount);
+        int64_t scaling1 = (phase->params.dotProd[dp].fVoltageSq/phase->params.current.dotProd[dp].sampleCount);
         scaling1 >>= 24;
         int64_t scaling = (scaling1 * phaseCal->current.PscaleFactor) >> 28;
+        scaling = (scaling * phase->params.current.phaseCorrection.firGain) >> 14;
         FActivePower = (factpower * scaling) >> 24;
     }
     return FActivePower;
@@ -424,9 +423,10 @@ _iq13 calculateFundamentalReactivePower(phaseMetrology *phase, phaseCalibrationD
     {
        int64_t freactpower = current->FReactivePower/current->sampleCount;
        freactpower >>= 12;
-       int64_t scaling1 = (phase->params.dotProd[dp].fVoltgaeSq/phase->params.current.dotProd[dp].sampleCount);
+       int64_t scaling1 = (phase->params.dotProd[dp].fVoltageSq/phase->params.current.dotProd[dp].sampleCount);
        scaling1 >>= 24;
        int64_t scaling = (scaling1 * phaseCal->current.PscaleFactor) >> 28;
+       scaling = (scaling * phase->params.current.phaseCorrection.firGain) >> 14;
        FReactivePower = (freactpower * scaling) >> 24;
     }
     return FReactivePower;
@@ -718,9 +718,9 @@ return powerFactor;
  */
 _iq15 calculateAngleVoltagetoCurrent(phaseMetrology *phase)
 {
-    _iq13 angle = _IQ13atan2(phase->readings.reactivePower, phase->readings.activePower);
-    angle = _IQ13div(angle, _IQ13(3.14));
-    return _IQ13toIQ15(angle);
+    _iq15 angle = _IQ15atan2(phase->readings.reactivePower, phase->readings.activePower);
+    angle = _IQ15div(angle, _IQ15(3.1415));
+    return angle;
 }
 
 /*!
@@ -758,7 +758,7 @@ _iq19 calculateUnderDeviation(phaseMetrology *phase)
     {
         underDeviation = _IQ19div((MAINS_NOMINAL_VOLTAGE_IQ19 - phase->readings.RMSVoltage), MAINS_NOMINAL_VOLTAGE_IQ19);
     }
-    return underDeviation;
+    return _IQ19mpy(underDeviation, _IQ19(100));
 }
 
 /*!
@@ -957,7 +957,7 @@ _iq19 calculateLinetoLineVoltage(phaseMetrology *phase1, phaseMetrology *phase2)
 
     _iq19 VRMS1 = phase1->readings.RMSVoltage;
     _iq19 VRMS2 = phase2->readings.RMSVoltage;
-    _iq19 angle = _IQ15toIQ19(phase1->readings.phasetoPhaseAngle);
+    _iq19 angle = _IQ15toIQ19(phase1->readings.phasetoPhaseAngle) >> 1;
 
     _iq19 x, y;
 
@@ -981,7 +981,7 @@ _iq19 calculateFundamentalLinetoLineVoltage(phaseMetrology *phase1, phaseMetrolo
 
     _iq19 VFRMS1 = phase1->readings.FRMSVoltage;
     _iq19 VFRMS2 = phase2->readings.FRMSVoltage;
-    _iq19 angle = _IQ15toIQ19(phase1->readings.phasetoPhaseAngle);
+    _iq19 angle = _IQ15toIQ19(phase1->readings.phasetoPhaseAngle) >> 1;
 
     _iq19 x, y;
 
@@ -1004,13 +1004,13 @@ _iq13 calculateAggregatePowerfactor(metrologyData *workingData)
 
     _iq13 powerFactor = _IQ13div(total.readings.activePower, total.readings.apparentPower);
 
-    if(total.readings.reactivePower >= 0)
+    if(total.readings.reactivePower > 0)
     {
-        return -powerFactor;
+        powerFactor = -powerFactor;
     }
-    if(total.readings.activePower > 0)
+    if(total.readings.activePower < 0)
     {
-        return -powerFactor;
+        powerFactor = -powerFactor;
     }
 
   return powerFactor;
@@ -1029,8 +1029,8 @@ _iq19 calculateVectorCurrentSum(metrologyData *workingData)
     _iq19 current0 = workingData->phases[0].readings.RMSCurrent;
     _iq19 current1 = workingData->phases[1].readings.RMSCurrent;
     _iq19 current2 = workingData->phases[2].readings.RMSCurrent;
-    _iq19 angle1 = _IQ15toIQ19(workingData->phases[1].readings.phasetoPhaseAngle);
-    _iq19 angle2 = _IQ15toIQ19(workingData->phases[2].readings.phasetoPhaseAngle);
+    _iq19 angle1 = (_IQ15toIQ19(workingData->phases[0].readings.phasetoPhaseAngle + workingData->phases[0].readings.powerFactorAngle - workingData->phases[1].readings.powerFactorAngle) >> 1);
+    _iq19 angle2 = (_IQ15toIQ19(workingData->phases[1].readings.phasetoPhaseAngle + workingData->phases[1].readings.powerFactorAngle - workingData->phases[2].readings.powerFactorAngle) >> 1);
     _iq19 ix, iy;
 
     ix = current0 + _IQ19mpy(current1, _IQ19cosPU(angle1))

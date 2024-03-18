@@ -81,7 +81,7 @@ void Metrology_alignwithNVData(metrologyData *workingData);
  * @param[in] phCorr The phase correction data
  * @param[in] correction correction value
  */
-void Metrology_setPhaseCorrection(phaseCorrection *phCorr, int correction);
+void Metrology_setPhaseCorrection(phaseCorrection *phCorr, int32_t correction);
 
 /*!
  * @brief Metrology Align with calibration data

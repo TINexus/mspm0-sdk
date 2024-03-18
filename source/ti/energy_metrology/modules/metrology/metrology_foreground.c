@@ -155,6 +155,32 @@ void Metrology_calculateThreePhaseParameters(metrologyData *workingData)
 {
     uint32_t supportParams = workingData->supportedParams;
 
+    if((supportParams & LINETOLINE_VOLTAGE_SUPPORT) == LINETOLINE_VOLTAGE_SUPPORT)
+    {
+        readLinetoLineVoltage(workingData);
+    }
+    if((supportParams & FUNDAMENTAL_LINETOLINE_VOLTAGE_SUPPORT) == FUNDAMENTAL_LINETOLINE_VOLTAGE_SUPPORT)
+    {
+        readFundamentalLinetoLineVoltage(workingData);
+    }
+    if((supportParams & CURRENT_VECTOR_SUM) == CURRENT_VECTOR_SUM)
+    {
+        workingData->totals.currentVectorSum = calculateVectorCurrentSum(workingData);
+    }
+    if((supportParams & AGGREGATE_POWER_FACTOR) == AGGREGATE_POWER_FACTOR)
+    {
+        workingData->totals.powerFactor = calculateAggregatePowerfactor(workingData);
+    }
+}
+
+/*!
+ * @brief    Calculate total parameters
+ * @param[in] workingData The metrology instance
+ */
+void Metrology_calculateTotalParameters(metrologyData *workingData)
+{
+    uint32_t supportParams = workingData->supportedParams;
+
     if((supportParams & TOTAL_ACTIVE_POWER_SUPPORT) == TOTAL_ACTIVE_POWER_SUPPORT)
     {
         workingData->totals.readings.activePower = calculateTotalActivePower(workingData);
@@ -178,22 +204,6 @@ void Metrology_calculateThreePhaseParameters(metrologyData *workingData)
     if((supportParams & TOTAL_FUNDAMENTAL_APPARENT_POWER_SUPPORT) == TOTAL_FUNDAMENTAL_APPARENT_POWER_SUPPORT)
     {
         workingData->totals.readings.fundamentalApparentPower = calculateTotalFundamentalApparentPower(workingData);
-    }
-    if((supportParams & LINETOLINE_VOLTAGE_SUPPORT) == LINETOLINE_VOLTAGE_SUPPORT)
-    {
-        readLinetoLineVoltage(workingData);
-    }
-    if((supportParams & FUNDAMENTAL_LINETOLINE_VOLTAGE_SUPPORT) == FUNDAMENTAL_LINETOLINE_VOLTAGE_SUPPORT)
-    {
-        readFundamentalLinetoLineVoltage(workingData);
-    }
-    if((supportParams & CURRENT_VECTOR_SUM) == CURRENT_VECTOR_SUM)
-    {
-        workingData->totals.currentVectorSum = calculateVectorCurrentSum(workingData);
-    }
-    if((supportParams & AGGREGATE_POWER_FACTOR) == AGGREGATE_POWER_FACTOR)
-    {
-        workingData->totals.powerFactor = calculateAggregatePowerfactor(workingData);
     }
 }
 

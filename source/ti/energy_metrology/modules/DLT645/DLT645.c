@@ -166,6 +166,15 @@ static void __attribute__((section(".TI.ramfunc"))) DLT645_setNeutralCalibration
 static void __attribute__((section(".TI.ramfunc"))) DLT645_processRxMessage(metrologyData *workingData, DLT645Buf *dlt645, SerialMsg *rxMsg);
 
 /*!
+ * @brief DLT645 UART receive DMA init
+ * @param[in] dlt645      The DLT645 instance
+ */
+void DLT645_UARTRxdmaInit(DLT645Buf *dlt645)
+{
+    HAL_startUARTDMARecieve(dlt645->uartChan, dlt645->rxMsg.buf.uint8, 14);
+}
+
+/*!
  * @brief Finds upper 16 bits of 32 bit value
  * @param[in] value 32 bit value
  * @return upper 16 bits of given 32 bit value
@@ -252,7 +261,8 @@ int __attribute__((section(".TI.ramfunc"))) DLT645_prepareTxMessage(DLT645Buf *d
         return false;
     }
 
-    DLT645_serialWrite(dlt645, length);
+    HAL_startUARTDMATransmit(dlt645->uartChan, tx8, length);
+
     return true;
 }
 
@@ -898,7 +908,11 @@ static void __attribute__((section(".TI.ramfunc"))) DLT645_processRxMessage(metr
         msgLen += 2;
         tx8[2] = MAX_PHASES;
         msgLen += 1;
+#if defined(NEUTRAL_SUPPORT)
         tx8[3] = DLT645_NEUTRAL_SUPPORT;
+#else
+        tx8[3] = 0;
+#endif
         msgLen += 1;
         tx8[4] = DLT645_PHASE_CORRECTION_SUPPORT;
         msgLen += 1;
@@ -910,7 +924,7 @@ static void __attribute__((section(".TI.ramfunc"))) DLT645_processRxMessage(metr
                  METER_CONFIG_1_POWER_FACTOR   |
                  METER_CONFIG_1_MAINS_FREQUENCY|
                  METER_CONFIG_1_QUADRATURE_REACTIVE_POWER ;
-         tx8[6]= METER_CONFIG_2_FUNDAMENTAL_APPARENT_POWER |
+        tx8[6] = METER_CONFIG_2_FUNDAMENTAL_APPARENT_POWER |
                  METER_CONFIG_2_FUNDAMENTAL_ACTIVE_POWER   |
                  METER_CONFIG_2_FUNDAMENTAL_REACTIVE_POWER |
                  METER_CONFIG_2_FUNDAMENTAL_VRMS           |
@@ -934,7 +948,11 @@ static void __attribute__((section(".TI.ramfunc"))) DLT645_processRxMessage(metr
         tx16[8] = DLT645_findLow16(calc);
         tx16[9] = DLT645_findHigh16(calc);
         msgLen += 4;
+#if defined(SPLIT_PHASE_SUPPORT)
+        tx8[21] = 1;
+#else
         tx8[21] = 0;
+#endif
         msgLen += 1;
         DLT645_prepareTxMessage(dlt645, msgLen);
         break;
@@ -955,7 +973,7 @@ static void __attribute__((section(".TI.ramfunc"))) DLT645_processRxMessage(metr
         tx8[0] = rxMsg->uint8[DLT645_MSG_RX_START_BODY];
         tx8[1] = rxMsg->uint8[DLT645_MSG_RX_START_BODY + 1] | 0x80;
         msgLen += 2;
-        DL_RTC_getCalendarTime(RTC);
+        HAL_getRTC(&tx8[2]);
         msgLen += 6;
         tx16[4] = 0;
         msgLen += 2;
@@ -996,46 +1014,68 @@ static void __attribute__((section(".TI.ramfunc"))) DLT645_processRxMessage(metr
             commStatus &= ~DLT645_STATUS_PASSWORD_OK;
         }
         break;
+#if defined(THREE_PHASE_SUPPORT) || defined(TWO_PHASE_SUPPORT) || defined(SPLIT_PHASE_SUPPORT) || defined(SINGLE_PHASE_SUPPORT)
     case HOST_CMD_GET_READINGS_PHASE_1:
         DLT645_sendPhaseReadingsReport(workingData, dlt645, rxMsg, PHASE_ONE);
         break;
+#endif
 
-#ifdef THREE_PHASE_SUPPORT
+#if defined(THREE_PHASE_SUPPORT) || defined(TWO_PHASE_SUPPORT) || defined(SPLIT_PHASE_SUPPORT)
     case HOST_CMD_GET_READINGS_PHASE_2:
         DLT645_sendPhaseReadingsReport(workingData, dlt645, rxMsg, PHASE_TWO);
         break;
+#endif
+
+#if defined(THREE_PHASE_SUPPORT)
     case HOST_CMD_GET_READINGS_PHASE_3:
         DLT645_sendPhaseReadingsReport(workingData, dlt645, rxMsg, PHASE_THERE);
         break;
 #endif
+
     case HOST_CMD_GET_READINGS_NEUTRAL:
         DLT645_sendNeutralReadings(workingData, dlt645, rxMsg);
         break;
+
+#if defined(THREE_PHASE_SUPPORT) || defined(TWO_PHASE_SUPPORT) || defined(SPLIT_PHASE_SUPPORT) || defined(SINGLE_PHASE_SUPPORT)
     case HOST_CMD_GET_CONSUMPTION_PHASE_1:
         DLT645_sendPhaseConsumptionReport(workingData, dlt645, rxMsg, PHASE_ONE);
         break;
-#ifdef THREE_PHASE_SUPPORT
+#endif
+
+#if defined(THREE_PHASE_SUPPORT) || defined(TWO_PHASE_SUPPORT) || defined(SPLIT_PHASE_SUPPORT)
     case HOST_CMD_GET_CONSUMPTION_PHASE_2:
         DLT645_sendPhaseConsumptionReport(workingData, dlt645, rxMsg, PHASE_TWO);
         break;
+#endif
+
+#if defined(THREE_PHASE_SUPPORT)
     case HOST_CMD_GET_CONSUMPTION_PHASE_3:
         DLT645_sendPhaseConsumptionReport(workingData, dlt645, rxMsg, PHASE_THERE);
         break;
 #endif
+
     case HOST_CMD_GET_CONSUMPTION_AGGREGATE:
         DLT645_sendAggregateConsumptionReport(workingData, dlt645, rxMsg);
         break;
+
+#if defined(THREE_PHASE_SUPPORT) || defined(TWO_PHASE_SUPPORT) || defined(SPLIT_PHASE_SUPPORT) || defined(SINGLE_PHASE_SUPPORT)
     case HOST_CMD_GET_EXTRA_READINGS_PHASE_1:
         DLT645_sendPhaseExtraReadingsReport(workingData, dlt645, rxMsg, PHASE_ONE);
         break;
-#ifdef THREE_PHASE_SUPPORT
+#endif
+
+#if defined(THREE_PHASE_SUPPORT) || defined(TWO_PHASE_SUPPORT) || defined(SPLIT_PHASE_SUPPORT)
     case HOST_CMD_GET_EXTRA_READINGS_PHASE_2:
         DLT645_sendPhaseExtraReadingsReport(workingData, dlt645, rxMsg, PHASE_TWO);
         break;
+#endif
+
+#if defined(THREE_PHASE_SUPPORT)
     case HOST_CMD_GET_EXTRA_READINGS_PHASE_3:
         DLT645_sendPhaseExtraReadingsReport(workingData, dlt645, rxMsg, PHASE_THERE);
         break;
 #endif
+
     case HOST_CMD_GET_EXTRA_READINGS_NEUTRAL:
         DLT645_sendNeutralExtraReadingsReport(workingData, dlt645, rxMsg);
         break;
@@ -1045,6 +1085,8 @@ static void __attribute__((section(".TI.ramfunc"))) DLT645_processRxMessage(metr
         msgLen += 2;
         DLT645_prepareTxMessage(dlt645, msgLen);
         break;
+
+#if defined(THREE_PHASE_SUPPORT) || defined(TWO_PHASE_SUPPORT) || defined(SPLIT_PHASE_SUPPORT) || defined(SINGLE_PHASE_SUPPORT)
     case HOST_CMD_GET_RAW_ACTIVE_POWER_PHASE_1:
         tx8[0] = rxMsg->uint8[DLT645_MSG_RX_START_BODY];
         tx8[1] = rxMsg->uint8[DLT645_MSG_RX_START_BODY + 1] | 0x80;
@@ -1053,7 +1095,9 @@ static void __attribute__((section(".TI.ramfunc"))) DLT645_processRxMessage(metr
         msgLen += 10;
         DLT645_prepareTxMessage(dlt645, msgLen);
         break;
-#ifdef THREE_PHASE_SUPPORT
+#endif
+
+#if defined(THREE_PHASE_SUPPORT) || defined(TWO_PHASE_SUPPORT) || defined(SPLIT_PHASE_SUPPORT)
     case HOST_CMD_GET_RAW_ACTIVE_POWER_PHASE_2:
         tx8[0] = rxMsg->uint8[DLT645_MSG_RX_START_BODY];
         tx8[1] = rxMsg->uint8[DLT645_MSG_RX_START_BODY + 1] | 0x80;
@@ -1062,6 +1106,9 @@ static void __attribute__((section(".TI.ramfunc"))) DLT645_processRxMessage(metr
         msgLen += 10;
         DLT645_prepareTxMessage(dlt645, msgLen);
         break;
+#endif
+
+#if defined(THREE_PHASE_SUPPORT)
     case HOST_CMD_GET_RAW_ACTIVE_POWER_PHASE_3:
         tx8[0] = rxMsg->uint8[DLT645_MSG_RX_START_BODY];
         tx8[1] = rxMsg->uint8[DLT645_MSG_RX_START_BODY + 1] | 0x80;
@@ -1071,6 +1118,8 @@ static void __attribute__((section(".TI.ramfunc"))) DLT645_processRxMessage(metr
         DLT645_prepareTxMessage(dlt645, msgLen);
         break;
 #endif
+
+#if defined(THREE_PHASE_SUPPORT) || defined(TWO_PHASE_SUPPORT) || defined(SPLIT_PHASE_SUPPORT) || defined(SINGLE_PHASE_SUPPORT)
     case HOST_CMD_GET_RAW_REACTIVE_POWER_PHASE_1:
         tx8[0] = rxMsg->uint8[DLT645_MSG_RX_START_BODY];
         tx8[1] = rxMsg->uint8[DLT645_MSG_RX_START_BODY + 1] | 0x80;
@@ -1079,7 +1128,9 @@ static void __attribute__((section(".TI.ramfunc"))) DLT645_processRxMessage(metr
         msgLen += 10;
         DLT645_prepareTxMessage(dlt645, msgLen);
         break;
-#ifdef THREE_PHASE_SUPPORT
+#endif
+
+#if defined(THREE_PHASE_SUPPORT) || defined(TWO_PHASE_SUPPORT) || defined(SPLIT_PHASE_SUPPORT)
     case HOST_CMD_GET_RAW_REACTIVE_POWER_PHASE_2:
         tx8[0] = rxMsg->uint8[DLT645_MSG_RX_START_BODY];
         tx8[1] = rxMsg->uint8[DLT645_MSG_RX_START_BODY + 1] | 0x80;
@@ -1088,6 +1139,9 @@ static void __attribute__((section(".TI.ramfunc"))) DLT645_processRxMessage(metr
         msgLen += 10;
         DLT645_prepareTxMessage(dlt645, msgLen);
         break;
+#endif
+
+#if defined(THREE_PHASE_SUPPORT)
     case HOST_CMD_GET_RAW_REACTIVE_POWER_PHASE_3:
         tx8[0] = rxMsg->uint8[DLT645_MSG_RX_START_BODY];
         tx8[1] = rxMsg->uint8[DLT645_MSG_RX_START_BODY + 1] | 0x80;
@@ -1108,13 +1162,20 @@ static void __attribute__((section(".TI.ramfunc"))) DLT645_processRxMessage(metr
         }
         DLT645_prepareTxMessage(dlt645, msgLen);
         break;
+
+#if defined(THREE_PHASE_SUPPORT) || defined(TWO_PHASE_SUPPORT) || defined(SPLIT_PHASE_SUPPORT) || defined(SINGLE_PHASE_SUPPORT)
     case HOST_CMD_SET_CALIBRATION_PHASE_1:
         DLT645_setPhaseCalibrationData(workingData, dlt645, rxMsg, PHASE_ONE);
         break;
-#ifdef THREE_PHASE_SUPPORT
+#endif
+
+#if defined(THREE_PHASE_SUPPORT) || defined(TWO_PHASE_SUPPORT) || defined(SPLIT_PHASE_SUPPORT)
     case HOST_CMD_SET_CALIBRATION_PHASE_2:
         DLT645_setPhaseCalibrationData(workingData, dlt645, rxMsg, PHASE_TWO);
         break;
+#endif
+
+#if defined(THREE_PHASE_SUPPORT)
     case HOST_CMD_SET_CALIBRATION_PHASE_3:
         DLT645_setPhaseCalibrationData(workingData, dlt645, rxMsg, PHASE_THERE);
         break;
@@ -1129,13 +1190,20 @@ static void __attribute__((section(".TI.ramfunc"))) DLT645_processRxMessage(metr
         msgLen += 2;
         DLT645_prepareTxMessage(dlt645, msgLen);
         break;
+
+#if defined(THREE_PHASE_SUPPORT) || defined(TWO_PHASE_SUPPORT) || defined(SPLIT_PHASE_SUPPORT) || defined(SINGLE_PHASE_SUPPORT)
     case HOST_CMD_GET_CALIBRATION_PHASE_1:
         DLT645_sendPhaseCalibrationData(workingData, dlt645, rxMsg, PHASE_ONE);
         break;
-#ifdef THREE_PHASE_SUPPORT
+#endif
+
+#if defined(THREE_PHASE_SUPPORT) || defined(TWO_PHASE_SUPPORT) || defined(SPLIT_PHASE_SUPPORT)
     case HOST_CMD_GET_CALIBRATION_PHASE_2:
         DLT645_sendPhaseCalibrationData(workingData, dlt645, rxMsg, PHASE_TWO);
         break;
+#endif
+
+#if defined(THREE_PHASE_SUPPORT)
     case HOST_CMD_GET_CALIBRATION_PHASE_3:
         DLT645_sendPhaseCalibrationData(workingData, dlt645, rxMsg, PHASE_THERE);
         break;
@@ -1181,73 +1249,28 @@ void DLT645_service(metrologyData *workingData, DLT645Buf *dlt645)
 }
 
 /*!
- * @brief Read all RX Data to RX buffer
- * @param[in] dlt645 The DLT645 instance
- * @param[in] ch     RX data
- */
-void DLT645_rxByte(DLT645Buf *dlt645, uint8_t ch)
-{
-    if(dlt645->rxPending)
-    {
-        return;
-    }
-    dlt645->rxMsg.timeOut = 255;
-
-    if(dlt645->rxMsg.ptr == 0)
-    {
-        if(ch == 0x68)
-        {
-            dlt645->rxMsg.buf.uint8[dlt645->rxMsg.ptr++] = ch;
-            dlt645->rxMsg.len = 12 + MAX_DLT645_MSG_BODY;
-        }
-
-    }
-    else
-    {
-        if(dlt645->rxMsg.ptr == 9)
-        {
-            if(ch <= MAX_DLT645_MSG_BODY)
-            {
-                dlt645->rxMsg.len = 12 + ch;
-            }
-            else
-            {
-                dlt645->rxMsg.ptr = 0;
-            }
-        }
-
-        dlt645->rxMsg.buf.uint8[dlt645->rxMsg.ptr++] = ch;
-
-        if(dlt645->rxMsg.ptr == dlt645->rxMsg.len)
-        {
-            /* This is end of packet    */
-            if(dlt645->rxMsg.buf.uint8[dlt645->rxMsg.len - 1] == 0x16)
-            {
-                uint8_t sum = dlt645->rxMsg.buf.uint8[0];
-                for(int i = 1; i < dlt645->rxMsg.len - 2; i++)
-                {
-                    sum += dlt645->rxMsg.buf.uint8[i];
-                }
-                if(dlt645->rxMsg.buf.uint8[dlt645->rxMsg.len - 2] == (sum & 0xFF))
-                {
-                    dlt645->rxPending = true;
-                }
-            }
-            dlt645->rxMsg.ptr = 0;
-        }
-    }
-}
-
-/*!
  * @brief Read UART receive byte
  * @param[in] dlt645 The dlt645 instance
- * @param[in] rxChar Received byte through UART
  */
-void DLT645_UARTRxByte(DLT645Buf *dlt645, uint8_t rxChar)
+void DLT645_UARTRxByte(DLT645Buf *dlt645)
 {
     if(!dlt645->txInProgress)
     {
-        DLT645_rxByte(dlt645, rxChar);
+        dlt645->rxMsg.len = 10 + dlt645->rxMsg.buf.uint8[9] + 2;
+
+        /* This is end of packet    */
+        if(dlt645->rxMsg.buf.uint8[dlt645->rxMsg.len - 1] == 0x16)
+        {
+            uint8_t sum = dlt645->rxMsg.buf.uint8[0];
+            for(int i = 1; i < dlt645->rxMsg.len - 2; i++)
+            {
+                sum += dlt645->rxMsg.buf.uint8[i];
+            }
+            if(dlt645->rxMsg.buf.uint8[dlt645->rxMsg.len - 2] == (sum & 0xFF))
+            {
+                dlt645->rxPending = true;
+            }
+        }
     }
 }
 

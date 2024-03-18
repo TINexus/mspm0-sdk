@@ -66,6 +66,12 @@ void Metrology_calculatePhaseReadings(metrologyData *workingData, PHASES ph);
 void Metrology_calculateThreePhaseParameters(metrologyData *workingData);
 
 /*!
+ * @brief    Calculate total parameters
+ * @param[in] workingData The metrology instance
+ */
+void Metrology_calculateTotalParameters(metrologyData *workingData);
+
+/*!
  * @brief    Calculate neutral parameters
  * @param[in] workingData The metrology instance
  */

@@ -121,13 +121,18 @@ void Metrology_alignwithNVData(metrologyData *workingData)
  * @param[in] phCorr The phase correction data
  * @param[in] correction correction value
  */
-void Metrology_setPhaseCorrection(phaseCorrection *phCorr, int correction)
+void Metrology_setPhaseCorrection(phaseCorrection *phCorr, int32_t correction)
 {
     int tableEntry;
 
     correction += PHASE_SHIFT_FIR_TABLE_ELEMENTS >> 1;
     phCorr->step = I_HISTORY_STEPS + (correction / PHASE_SHIFT_FIR_TABLE_ELEMENTS);
-    tableEntry = PHASE_SHIFT_FIR_TABLE_ELEMENTS - 1 - correction % PHASE_SHIFT_FIR_TABLE_ELEMENTS;
+    tableEntry = PHASE_SHIFT_FIR_TABLE_ELEMENTS - (correction % PHASE_SHIFT_FIR_TABLE_ELEMENTS);
+    while(tableEntry >= PHASE_SHIFT_FIR_TABLE_ELEMENTS)
+    {
+        phCorr->step--;
+        tableEntry -= PHASE_SHIFT_FIR_TABLE_ELEMENTS;
+    }
     phCorr->firBeta = (phase_shift_fir_coeffs[tableEntry][0]);
     phCorr->firGain = (phase_shift_fir_coeffs[tableEntry][1]);
 }

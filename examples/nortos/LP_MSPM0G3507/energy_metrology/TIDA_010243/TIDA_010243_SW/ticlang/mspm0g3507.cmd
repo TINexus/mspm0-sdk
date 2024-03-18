@@ -36,6 +36,7 @@
 MEMORY
 {
 FLASH (RX) : origin = 0x00000000, length = 0x0001FC00
+/* Sector to store calibration parameters	*/
 MEM_SECTOR_01 (R): origin = 0x0001FC00, length = 0x00000400
 SRAM  (RWX) : origin = 0x20200000, length = 0x00008000
 }
@@ -60,5 +61,5 @@ SECTIONS
     .sysmem :   > SRAM
     .stack  :   > SRAM (HIGH)
 
-    .memsector01 : {} > MEM_SECTOR_01
+    .memsector01 : palign(8) {} > MEM_SECTOR_01
 }

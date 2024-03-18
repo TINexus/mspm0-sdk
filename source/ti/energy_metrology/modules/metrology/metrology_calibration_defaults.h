@@ -164,34 +164,47 @@ extern calibrationData calibrationDefaults;
     Defines holds the value for phase correction to compensate for delay due to the current
     transformer and/or front-end circuitry at phase A. This can be set to a value that is
     in fairly acceptable range, and it will be fine tuned under phase correction during calibration. */
-#define DEFAULT_BASE_PHASE_A_CORRECTION             ((int) (-2.4e-06f * SAMPLE_RATE * PHASE_SHIFT_FIR_TABLE_ELEMENTS))
+/*  It is set to 0 (0f * SAMPLE_RATE * PHASE_SHIFT_FIR_TABLE_ELEMENTS) when testing with simulated
+ *  data as it doesn't required phase correction, any value between -125us to 125 us is acceptable and
+ *  it is fine tuned during calibration, ideally it should be close to zero*/
+#define DEFAULT_BASE_PHASE_A_CORRECTION             ((int) 0)//(-2.4e-06f * SAMPLE_RATE * PHASE_SHIFT_FIR_TABLE_ELEMENTS))
 
 
 /** @def DEFAULT_BASE_PHASE_B_CORRECTION
     Defines holds the value for phase correction to compensate for delay due to the current
     transformer and/or front-end circuitry at phase B. This can be set to a value that is in
     fairly acceptable range, and it will be fine tuned under phase correction during calibration. */
-#define DEFAULT_BASE_PHASE_B_CORRECTION             ((int) (-3.9e-06f * SAMPLE_RATE * PHASE_SHIFT_FIR_TABLE_ELEMENTS))
+/*  It is set to 0 (0f * SAMPLE_RATE * PHASE_SHIFT_FIR_TABLE_ELEMENTS) when testing with simulated
+ *  data as it doesn't required phase correction, any value between -125us to 125 us is acceptable and
+ *  it is fine tuned during calibration, ideally it should be close to zero*/
+#define DEFAULT_BASE_PHASE_B_CORRECTION             ((int) 0)//(-3.9e-06f * SAMPLE_RATE * PHASE_SHIFT_FIR_TABLE_ELEMENTS))
 
 
 /** @def DEFAULT_BASE_PHASE_C_CORRECTION
     Defines holds the value for phase correction to compensate for delay due to the current
     transformer and/or front-end circuitry at phase C. This can be set to a value that is in
     fairly acceptable range, and it will be fine tuned under phase correction during calibration. */
-#define DEFAULT_BASE_PHASE_C_CORRECTION             ((int) (1.5e-06f * SAMPLE_RATE * PHASE_SHIFT_FIR_TABLE_ELEMENTS))
+/*  It is set to 0 (0f * SAMPLE_RATE * PHASE_SHIFT_FIR_TABLE_ELEMENTS) when testing with simulated
+ *  data as it doesn't required phase correction, any value between -125us to 125 us is acceptable and
+ *  it is fine tuned during calibration, ideally it should be close to zero*/
+#define DEFAULT_BASE_PHASE_C_CORRECTION             ((int) 0)//(1.5e-06f * SAMPLE_RATE * PHASE_SHIFT_FIR_TABLE_ELEMENTS))
 
 
 /** @def DEFAULT_BASE_NEUTRAL_PHASE_CORRECTION
     Defines holds the value for phase correction to compensate for delay due to the current
     transformer and/or front-end circuitry at neutral. This can be set to a value that is in
     fairly acceptable range, and it will be fine tuned under phase correction during calibration. */
-#define DEFAULT_BASE_NEUTRAL_PHASE_CORRECTION       ((int) (1.5e-06f * SAMPLE_RATE * PHASE_SHIFT_FIR_TABLE_ELEMENTS))
+/*  It is set to 0 (0f * SAMPLE_RATE * PHASE_SHIFT_FIR_TABLE_ELEMENTS) when testing with simulated
+ *  data as it doesn't required phase correction, any value between -125us to 125 us is acceptable and
+ *  it is fine tuned during calibration, ideally it should be close to zero*/
+#define DEFAULT_BASE_NEUTRAL_PHASE_CORRECTION       ((int) 0)//(1.5e-06f * SAMPLE_RATE * PHASE_SHIFT_FIR_TABLE_ELEMENTS))
 
 
 /*! @brief Default calibration data to store in flash   */
 calibrationData calibrationDefaults =
 {
     {
+#if defined(THREE_PHASE_SUPPORT) || defined(TWO_PHASE_SUPPORT) || defined(SPLIT_PHASE_SUPPORT) || defined(SINGLE_PHASE_SUPPORT)
         {
             {
                 .IinitialDcEstimate     = DEFAULT_I_DC_ESTIMATE_A,
@@ -210,6 +223,8 @@ calibrationData calibrationDefaults =
             .VFundamentalAcOffset   = DEFAULT_V_FUNDAMENTAL_OFFSET_A,
             .VscaleFactor           = DEFAULT_V_RMS_SCALE_FACTOR_A,
         },
+#endif
+#if defined(THREE_PHASE_SUPPORT) || defined(TWO_PHASE_SUPPORT) || defined(SPLIT_PHASE_SUPPORT)
         {
             {
                 .IinitialDcEstimate     = DEFAULT_I_DC_ESTIMATE_B,
@@ -228,6 +243,8 @@ calibrationData calibrationDefaults =
             .VFundamentalAcOffset   = DEFAULT_V_FUNDAMENTAL_OFFSET_B,
             .VscaleFactor           = DEFAULT_V_RMS_SCALE_FACTOR_B,
         },
+#endif
+#if defined(THREE_PHASE_SUPPORT)
         {
             {
                 .IinitialDcEstimate     = DEFAULT_I_DC_ESTIMATE_C,
@@ -246,6 +263,7 @@ calibrationData calibrationDefaults =
             .VFundamentalAcOffset   = DEFAULT_V_FUNDAMENTAL_OFFSET_C,
             .VscaleFactor           = DEFAULT_V_RMS_SCALE_FACTOR_C,
         },
+#endif
     },
     {
         .IinitialDcEstimate     = DEFAULT_I_DC_ESTIMATE_NEUTRAL,

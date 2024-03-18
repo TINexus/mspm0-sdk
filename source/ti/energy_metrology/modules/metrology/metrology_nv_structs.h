@@ -98,7 +98,7 @@ typedef struct
 typedef struct
 {
     /*! @brief Defines phase calibration data   */
-    phaseCalibrationData phases[3];
+    phaseCalibrationData phases[MAX_PHASES];
     /*! @brief Defines neutral calibration data */
     currentSensorCalibrationData neutral;
     /*! @brief calibration state    */

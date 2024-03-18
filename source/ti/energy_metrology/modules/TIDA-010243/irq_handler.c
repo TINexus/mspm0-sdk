@@ -67,6 +67,8 @@ uint8_t sagCondition = 0;
 #define CURRENT_START_INDEX_DS    0
 /*! @brief Defines phase increment  */
 #define PHASE_INCREMENT           53
+/*! @brief uart communication stage */
+volatile int8_t uartStage = 0;
 
 /*!
  * @brief Debug init
@@ -85,8 +87,9 @@ void debugInit(void)
     {
         _iq23 t = _IQ23mpy(_IQ23div(_IQ23(i),_IQ23(160)), _IQ23(6.2831853));
 
-        voltage[i] = _IQ30mpy(_IQ30((300*1.414213562373095)/1585.2), _IQ23toIQ30(_IQ23sin(t)));
-        current[i] = _IQ30mpy(_IQ30(70*1.414213562373095/125), _IQ23toIQ30(_IQ23sin(t)));
+        /* Simulated data for testing in per unit Vrms = 120, Irms = 10  */
+        voltage[i] = _IQ30mpy(_IQ30((120*1.414213562373095)/1585.2), _IQ23toIQ30(_IQ23sin(t)));
+        current[i] = _IQ30mpy(_IQ30(10*1.414213562373095/125), _IQ23toIQ30(_IQ23sin(t)));
 
         sagvoltage[i] = _IQ30mpy(_IQ30(0.3), voltage[i]);
     }
@@ -206,40 +209,6 @@ void GROUP1_IRQHandler(void)
     }
 }
 
-/*! @brief UART Handler */
-void UART_0_INST_IRQHandler(void)
-{
-    uint16_t tx;
-    uint32_t status = DL_UART_getPendingInterrupt(UART_0_INST);
-
-    switch(status)
-    {
-    case DL_UART_IIDX_RX:
-        DLT645_UARTRxByte(&gDLT645, DL_UART_Main_receiveData(UART_0_INST));
-        break;
-    case DL_UART_IIDX_TX:
-        tx = DLT645_UARTTxByte(&gDLT645);
-
-        if (tx == 8800)
-        {
-            DL_UART_Main_disableInterrupt(UART_0_INST, DL_UART_MAIN_INTERRUPT_TX);
-            return;
-        }
-        uint8_t lowByte = tx & 0xFF;
-        uint8_t highByte = (tx >> 8) & 0xFF;
-        DL_UART_Main_transmitData(UART_0_INST, lowByte);
-
-        if (tx & 0x8000)
-        {
-          DL_UART_Main_disableInterrupt(UART_0_INST, DL_UART_MAIN_INTERRUPT_TX);
-        }
-        break;
-    default:
-        DL_UART_clearInterruptStatus(UART_0_INST, status);
-        break;
-    }
-}
-
 /*! @brief DMA Handler  */
 void DMA_IRQHandler(void)
 {
@@ -247,11 +216,37 @@ void DMA_IRQHandler(void)
     {
         switch(DL_DMA_getPendingInterrupt(DMA))
         {
-            case DL_DMA_EVENT_IIDX_DMACH1:
-                adsDataStatus = ADS_DATA_1_READY;
-                break;
-            default:
-                break;
+        case DL_DMA_EVENT_IIDX_DMACH2:
+           if(uartStage == 0)
+           {
+               int8_t len = gDLT645.rxMsg.buf.uint8[DLT645_PREAMBLE_BYTES + DLT645_MESSAGE_HEADER_BYTES - 1];
+               uartStage = 1;
+               DL_DMA_setTransferSize(DMA,DMA_CH2_CHAN_ID,len + DLT645_MESSAGE_TRAILER_BYTES);
+               DL_DMA_enableChannel(DMA, DMA_CH2_CHAN_ID);
+           }
+           else if(uartStage == 1)
+           {
+               uartStage = 2;
+               for(int i = DLT645_PREAMBLE_BYTES;i < MAX_SERIAL_MESSAGE_LEN;i++)
+               {
+                   gDLT645.rxMsg.buf.uint8[i-DLT645_PREAMBLE_BYTES] = gDLT645.rxMsg.buf.uint8[i];
+               }
+               DLT645_UARTRxByte(&gDLT645);
+           }
+           else
+           {
+               /* Do Nothing    */
+           }
+            break;
+        case DL_DMA_EVENT_IIDX_DMACH3:
+            DLT645_UARTRxdmaInit(&gDLT645);
+            uartStage = 0;
+            break;
+        case DL_DMA_EVENT_IIDX_DMACH1:
+            adsDataStatus = ADS_DATA_1_READY;
+            break;
+        default:
+            break;
         }
         if(adsDataStatus == ADS_DATA_READY)
         {

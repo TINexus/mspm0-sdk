@@ -156,7 +156,7 @@ int32_t Metrology_getPhaseFundIOffset(metrologyData *workingData, PHASES ph);
  * @param[in] ph          The phase number
  * @return Phase correction parameters
  */
-int32_t Metrology_getPhaseCorrectionParameters(metrologyData *workingData, PHASES ph);
+int16_t Metrology_getPhaseCorrectionParameters(metrologyData *workingData, PHASES ph);
 
 /*!
  * @brief Reads voltage scale factor
@@ -384,7 +384,7 @@ void Metrology_setPhaseQOffset(metrologyData *workingData, int32_t data, PHASES 
  * @param[in] data        The phase calibration offset
  * @param[in] ph          The phase number
  */
-void Metrology_setPhaseOffset(metrologyData *workingData, int32_t data, PHASES ph);
+void Metrology_setPhaseOffset(metrologyData *workingData, int16_t data, PHASES ph);
 
 /*!
  * @brief Update Neutral current offset

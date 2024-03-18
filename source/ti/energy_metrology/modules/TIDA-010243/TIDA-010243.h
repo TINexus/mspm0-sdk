@@ -59,6 +59,8 @@ extern "C" {
 
 /*! @brief Defines Number of cycles to skip initially   */
 #define INITIAL_ZERO_CROSSINGS_TO_SKIP     10
+/*! @brief Defines phase log complete status    */
+#define THREE_PHASE_LOG_DONE    0x07
 
 /*! @brief Defines TIDA instance    */
 typedef struct
@@ -140,8 +142,9 @@ void TIDA_calculateMetrologyParameters(TIDA_instance *tidaHandle, metrologyData 
  * @param[in] tidaHandle   The TIDA Instance
  * @param[in] workingData  The Metrology Data
  * @param[in] adsHandle    The ADS handle
+ * @param[in] dlt645       The dlt645 buffer
  */
-void TIDA_init(TIDA_instance *tidaHandle, metrologyData *workingData, ADS_Instance *adsHandle);
+void TIDA_init(TIDA_instance *tidaHandle, metrologyData *workingData, ADS_Instance *adsHandle, DLT645Buf *dlt645);
 
 /*!
  * @brief Debug init

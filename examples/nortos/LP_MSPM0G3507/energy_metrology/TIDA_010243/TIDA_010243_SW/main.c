@@ -41,7 +41,8 @@ int main(void)
     SYSCFG_DL_init();
     HAL_init();
 
-    TIDA_init(&gTidaHandle, &gMetrologyworkingData, &gADSHandle);
+    TIDA_init(&gTidaHandle, &gMetrologyworkingData, &gADSHandle, &gDLT645);
+
     memcpy(gADSHandle.ADS_initRegData, &ADS01_initRegData, ((NUM_REGISTERS + 1) * 2));
     debugInit();
 

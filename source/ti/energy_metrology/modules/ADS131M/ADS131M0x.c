@@ -39,14 +39,14 @@
 /*!
  * @brief get upper byte data
  * @param[in] uint16_Word 16 bit word
- * return upper byte of 16 bit word
+ * @return upper byte of 16 bit word
  */
 uint8_t ADS_upperByteData(uint16_t uint16_Word);
 
 /*!
  * @brief get lower byte data
  * @param[in] uint16_Word 16 bit word
- * return lower byte of 16 bit word
+ * @return lower byte of 16 bit word
  */
 uint8_t  ADS_lowerByteData(uint16_t uint16_Word);
 
@@ -54,7 +54,7 @@ uint8_t  ADS_lowerByteData(uint16_t uint16_Word);
  * @brief combine 2 bytes
  * @param[in] upperByte upper byte in 16 bit word
  * @param[in] lowerByte lower byte in 16 bit word
- * return 16 bit word
+ * @return 16 bit word
  */
 uint16_t ADS_combineBytes(uint8_t upperByte, uint8_t lowerByte);
 
@@ -65,7 +65,7 @@ uint16_t ADS_combineBytes(uint8_t upperByte, uint8_t lowerByte);
  * @param[in] numberOpcodes The number of opcodes
  * @param[in] dataArray     The data array
  * @param[in] dataArraySize The data array size
- * return Number of bytes of data
+ * @return Number of bytes of data
  */
 uint8_t  ADS_buildSPIArray(ADS_Instance *adsHandle, const uint16_t opcodeArray[], uint8_t numberOpcodes, uint8_t byteArray[], uint8_t dataArraySize);
 
@@ -82,21 +82,21 @@ uint16_t ADS_calculateCRC(ADS_CRC_TYPE crcType, const uint8_t dataBytes[], uint8
  * @brief Combine 8 bit data to signed 32 bit
  * @param[in] adsHandle     The ADS Instance
  * @param[in] dataBytes[]   The data array
- * return 32 bit data
+ * @return 32 bit data
  */
 int32_t  ADS_signExtend(ADS_Instance *adsHandle, uint8_t dataBytes[]);
 
 /*!
  * @brief Read ADS Register
  * @param[in] adsHandle     The ADS Instance
- * return ADS register data
+ * @return ADS register data
  */
 uint16_t ADS_readReg(ADS_Instance *adsHandle);
 
 /*!
  * @brief get upper byte data
  * @param[in] uint16_Word 16 bit word
- * return upper byte of 16 bit word
+ * @return upper byte of 16 bit word
  */
 uint8_t ADS_upperByteData(uint16_t uint16_Word)
 {
@@ -106,7 +106,7 @@ uint8_t ADS_upperByteData(uint16_t uint16_Word)
 /*!
  * @brief get lower byte data
  * @param[in] uint16_Word 16 bit word
- * return lower byte of 16 bit word
+ * @return lower byte of 16 bit word
  */
 uint8_t ADS_lowerByteData(uint16_t uint16_Word)
 {
@@ -117,7 +117,7 @@ uint8_t ADS_lowerByteData(uint16_t uint16_Word)
  * @brief combine 2 bytes
  * @param[in] upperByte upper byte in 16 bit word
  * @param[in] lowerByte lower byte in 16 bit word
- * return 16 bit word
+ * @return 16 bit word
  */
 uint16_t ADS_combineBytes(uint8_t upperByte, uint8_t lowerByte)
 {
@@ -131,7 +131,7 @@ uint16_t ADS_combineBytes(uint8_t upperByte, uint8_t lowerByte)
  * @param[in] numberOpcodes The number of opcodes
  * @param[in] dataArray     The data array
  * @param[in] dataArraySize The data array size
- * return Number of bytes of data
+ * @return Number of bytes of data
  */
 uint8_t ADS_buildSPIArray(ADS_Instance *adsHandle, const uint16_t opcodeArray[], uint8_t numberOpcodes, uint8_t dataArray[], uint8_t dataArraySize)
 {
@@ -229,7 +229,7 @@ uint16_t ADS_calculateCRC(ADS_CRC_TYPE crcType, const uint8_t dataBytes[], uint8
  * @brief Combine 8 bit data to signed 32 bit
  * @param[in] adsHandle     The ADS Instance
  * @param[in] dataBytes[]   The data array
- * return 32 bit data
+ * @return 32 bit data
  */
 int32_t ADS_signExtend(ADS_Instance *adsHandle, uint8_t dataBytes[])
 {

@@ -104,6 +104,16 @@ extern "C" {
 #define GEN_GPIO_IN_PINI_02_PORT   GEN_GPIO_IN_PORT
 #endif
 
+/*! @brief Defines input port for pin 3*/
+#ifndef GEN_GPIO_IN_PINI_03_PORT
+#define GEN_GPIO_IN_PINI_03_PORT   GEN_GPIO_IN_PORT
+#endif
+
+/*! @brief Defines input port for pin 4*/
+#ifndef GEN_GPIO_IN_PINI_04_PORT
+#define GEN_GPIO_IN_PINI_04_PORT   GEN_GPIO_IN_PORT
+#endif
+
 /*! @enum HAL_MEMORY_BLOCK_STARTADDR*/
 typedef enum
 {
@@ -161,6 +171,15 @@ typedef enum
     HAL_SPI_CHAN_MAX
 } HAL_SPI_CHAN;
 
+/*! @enum HAL_UART_CHAN */
+typedef enum
+{
+    /*! @brief Index associated to UART channel 0 */
+    HAL_UART_CHAN_0 = 0,
+    /*! @brief Total number of UART channels */
+    HAL_UART_CHAN_MAX
+}HAL_UART_CHAN;
+
 /*! @enum HAL_SPI_CS */
 typedef enum
 {
@@ -211,6 +230,17 @@ typedef struct HAL_SPIInstance_
     HAL_DMA_CHAN  dmaChanIdRx;
 }HAL_SPIInstance;
 
+/*! @brief Defines a UART instance  */
+typedef struct HAL_UARTInstance_
+{
+    /*! @brief UART Channel  */
+    UART_Regs     *inst;
+    /*! @brief DMA channel for UART transfer */
+    HAL_DMA_CHAN  dmaChanIdTx;
+    /*! @brief DMA channel for UART Receive */
+    HAL_DMA_CHAN  dmaChanIdRx;
+}HAL_UARTInstance;
+
 extern HAL_GPIOInstance    gpioInputPin[HAL_GPIO_IN_MAX];
 
 /**
@@ -249,6 +279,19 @@ void HAL_writeGPIOPin(HAL_GPIO_OUT pin, HAL_GPIO_STATE pinState);
 void HAL_enableGPIOInterrupt(HAL_GPIO_IN pin);
 
 /*!
+ * @brief     get gpio enabled interrupt status
+ * @param[in] pin       gpiopin
+ * @return gpio interrupt status
+ */
+uint32_t HAL_getGPIOEnabledInterruptStatus(HAL_GPIO_IN pin);
+
+/*!
+ * @brief     clear gpio interrupt status
+ * @param[in] pin       gpiopin
+ */
+void HAL_clearGPIOInterruptStatus(HAL_GPIO_IN pin);
+
+/*!
  * @brief Start SPI data transfer through DMA
  * @param[in]  dataTx[]  The transfer data
  * @param[in]  dataRx[]  The receive data
@@ -257,6 +300,22 @@ void HAL_enableGPIOInterrupt(HAL_GPIO_IN pin);
  * @param[in]  cs        The SPI Chip select pin
  */
 void HAL_startSPIDataTransfer(uint8_t dataTx[], uint8_t dataRx[], uint8_t byteLength, HAL_SPI_CHAN chan, HAL_SPI_CS cs);
+
+/*!
+ * @brief Start UART Receive DMA
+ * @param[in] chan       The UART channel
+ * @param[in] dataRx[]   Array to store received data
+ * @param[in] byteLength Number of bytes transfered
+ */
+void HAL_startUARTDMARecieve(HAL_UART_CHAN chan, uint8_t dataRx[], uint8_t byteLength);
+
+/*!
+ * @brief Start UART Transmit DMA
+ * @param[in] chan       The UART channel
+ * @param[in] dataTx[]   The transmit data
+ * @param[in] byteLength Number of bytes to transfer
+ */
+void HAL_startUARTDMATransmit(HAL_UART_CHAN chan, uint8_t dataTx[], uint8_t byteLength);
 
 /*!
  * @brief clear Memory block

@@ -91,16 +91,16 @@ void logPhaseParameters(metrologyData *workingData, int ph)
     /* Reload the limited number of hits value */
     phase->params.current.currentEndStops = ENDSTOP_HITS_FOR_OVERLOAD;
 
-    if(--ph < 0)
+    if(++ph >= MAX_PHASES)
     {
-        ph = MAX_PHASES - 1;
+        ph = 0;
     }
 
     /*
      *  PurePhase is signed 32 bit integer (IQ31) right shifting by 16 bits
      *  to convert it to IQ15 in per units with base value of 180 degrees
      */
-    phase->readings.phasetoPhaseAngle = (phase->params.purePhase >> 16) - (workingData->phases[ph].params.purePhase >> 16);
+    phase->readings.phasetoPhaseAngle = (workingData->phases[ph].params.purePhase >> 16) - (phase->params.purePhase >> 16);
 
     /* Reset the dpset data for next sampling */
     uint8_t dp = phase->params.dpSet;
@@ -112,7 +112,7 @@ void logPhaseParameters(metrologyData *workingData, int ph)
     phase->params.current.dotProd[dp].reactivePower = 0;
     phase->params.current.dotProd[dp].sampleCount = 0;
 
-    phase->params.dotProd[dp].fVoltgaeSq = 0;
+    phase->params.dotProd[dp].fVoltageSq = 0;
     phase->params.current.dotProd[dp].FActivePower = 0;
     phase->params.current.dotProd[dp].FReactivePower = 0;
     phase->params.dpSet ^= 1;
@@ -156,6 +156,26 @@ void logNeutralParameters(metrologyData *workingData)
     neutral->params.dpSet ^= 1;
 
     neutral->status |= PHASE_STATUS_NEW_LOG;
+}
+
+/*!
+ * @brief Metrology sin lookup
+ * @param[in] phase The phase angle
+ * @return sinvalue
+ */
+int32_t Metrology_ddsSinLookup(uint32_t phase)
+{
+    int32_t amp;
+    uint32_t step;
+
+    phase >>= METROLOGY_DDS_BIT_SHIFT;
+    step = phase & (METROLOGY_DDS_STEPS - 1);
+    if ((phase & METROLOGY_DDS_STEPS))
+        step = METROLOGY_DDS_STEPS - step;
+    amp = sineTable[step];
+    if ((phase & (2*METROLOGY_DDS_STEPS)))
+        amp = -amp;
+    return amp;
 }
 
 /*!
@@ -208,6 +228,7 @@ void Metrology_perSampleProcessing(metrologyData *workingData)
     _iq23 voltageQuadCorrected;
     _iq23 voltagePure;
     _iq23 voltageQuardPure;
+    int64_t voltageSq;
     int64_t cross_corr;
     _iq23 currentSample;
     _iq23 currentCorrected;
@@ -241,11 +262,12 @@ void Metrology_perSampleProcessing(metrologyData *workingData)
 
         if((supportedParams & VRMS_SUPPORT) == VRMS_SUPPORT)
         {
-            phaseDP->voltageSq += ((int64_t)voltageSample) * voltageSample;
+            voltageSq = ((int64_t)voltageSample) * voltageSample;
+            phaseDP->voltageSq += voltageSq;
             ++phaseDP->sampleCount;
             if((supportedParams & SAG_SWELL_SUPPORT) == SAG_SWELL_SUPPORT)
             {
-                cyclePhaseDP->cycleVoltageSq += ((int64_t)voltageSample) * voltageSample;
+                cyclePhaseDP->cycleVoltageSq += voltageSq;
                 ++cyclePhaseDP->cycleSampleCount;
             }
         }
@@ -254,7 +276,9 @@ void Metrology_perSampleProcessing(metrologyData *workingData)
 
         if(operatingMode == OPERATING_MODE_NORMAL)
         {
-            voltageCorrected = phase->params.vHistory[(phase->params.vHistoryIndex - phase->params.current.phaseCorrection.step) & V_HISTORY_MASK];
+            voltageCorrected = _IQ23mpyIQX(phase->params.vHistory[(phase->params.vHistoryIndex - phase->params.current.phaseCorrection.step - 1) & V_HISTORY_MASK], 23,
+                                (phase->params.current.phaseCorrection.firBeta), 15)
+                               + (phase->params.vHistory[(phase->params.vHistoryIndex - phase->params.current.phaseCorrection.step) & V_HISTORY_MASK]);
 
             if((supportedParams & FUNDAMENTAL_VRMS_SUPPORT) == FUNDAMENTAL_VRMS_SUPPORT)
             {
@@ -264,8 +288,8 @@ void Metrology_perSampleProcessing(metrologyData *workingData)
                    full scale pure voltage waveform and the current signal.
                    The answer from this estimator will only be correct once the pure waveform is properly phase
                    locked. */
-                voltagePure = _IQ23sinPU(phase->params.purePhase >> 9);
-                phaseDP->fVoltgaeSq += ((int64_t)voltageCorrected) * voltagePure;
+                voltagePure = Metrology_ddsSinLookup(phase->params.purePhase);
+                phaseDP->fVoltageSq += ((int64_t)voltageCorrected) * voltagePure;
                 /* If we look for maximum correlation when the real and synthetic waveforms are in sync:
                         - the sensitivity to errors is not that big around the match
                         - we don't know what the peak should be
@@ -275,7 +299,7 @@ void Metrology_perSampleProcessing(metrologyData *workingData)
                    minimise the correlation. This assumes the phase rate is being accurately derived from the mains
                    frequency measurement, and we only need to adjust the phase here. This is a sort of PLL, with the
                    frequency and phase aspects of the lock being seperately evaluated. */
-                voltageQuardPure = _IQ23cosPU((phase->params.purePhase >> 9));
+                voltageQuardPure = Metrology_ddsSinLookup(phase->params.purePhase + 0x40000000);
                 cross_corr = (((int64_t)voltageCorrected) * voltageQuardPure);
                 cross_corr >>=16;
                 /* We need to filter hard at this point, to massively suppress the harmonics. We do this with a single
@@ -289,7 +313,6 @@ void Metrology_perSampleProcessing(metrologyData *workingData)
                 phase->params.crossSum += (cross_corr - phase->params.crossSum) >> 13;
                 phase->params.purePhase += phase->params.crossSum >> 5;
                 phase->params.purePhase += phase->params.purePhaseRate;
-
             }
         }
 
@@ -312,8 +335,8 @@ void Metrology_perSampleProcessing(metrologyData *workingData)
         {
             if((supportedParams & ACTIVE_POWER_SUPPORT) == ACTIVE_POWER_SUPPORT)
             {
-                voltageCorrected = _IQ23mpy(phase->params.vHistory[(phase->params.vHistoryIndex - phase->params.current.phaseCorrection.step) & V_HISTORY_MASK],
-                                    _IQ15toIQ23(phase->params.current.phaseCorrection.firBeta))
+                voltageCorrected = _IQ23mpyIQX(phase->params.vHistory[(phase->params.vHistoryIndex - phase->params.current.phaseCorrection.step - 1) & V_HISTORY_MASK], 23,
+                                    (phase->params.current.phaseCorrection.firBeta), 15)
                                    + (phase->params.vHistory[(phase->params.vHistoryIndex - phase->params.current.phaseCorrection.step) & V_HISTORY_MASK]);
 
                 currentDP->activePower += ((int64_t)currentSample) * voltageCorrected;
@@ -325,8 +348,8 @@ void Metrology_perSampleProcessing(metrologyData *workingData)
 
             if((supportedParams & REACTIVE_POWER_SUPPORT) == REACTIVE_POWER_SUPPORT)
             {
-                voltageQuadCorrected = _IQ23mpy(phase->params.vHistory[(phase->params.vHistoryIndex - phase->params.current.quadratureCorrection.step) & V_HISTORY_MASK],
-                                                _IQ15toIQ23(phase->params.current.quadratureCorrection.firBeta))
+                voltageQuadCorrected = _IQ23mpyIQX(phase->params.vHistory[(phase->params.vHistoryIndex - phase->params.current.quadratureCorrection.step - 1) & V_HISTORY_MASK], 23,
+                                                (phase->params.current.quadratureCorrection.firBeta), 15)
                                                   + (phase->params.vHistory[(phase->params.vHistoryIndex - phase->params.current.quadratureCorrection.step) & V_HISTORY_MASK]);
 
                 currentDP->reactivePower += ((int64_t)currentSample) * voltageQuadCorrected;
@@ -340,17 +363,17 @@ void Metrology_perSampleProcessing(metrologyData *workingData)
 
 /*
  * Frequency measurement:
- * time between 2 volatge samples is divided into 256(2 power 8) parts
- * first will detect the change of voltage form positive to negative or viseversa
+ * time between 2 voltage samples is divided into 256(2 power 8) parts
+ * first will detect the change of voltage form positive to negative or vice versa
  * when voltage changes from negative to positive frequency calculation is started
  * else do nothing.
- * everytime a sample is sampled cycleSamples is incremented by 256
+ * every time a sample is sampled cycleSamples is incremented by 256
  * when voltage is changed from negative to positive check the cycle samples limit
  * it has to be in between cycles for min freq and max freq.
  * if it is out of limits something has gone wrong and restart the cycle samples
  * as we divided the time between 2 samples into 256, now we have to estimate the approximate
  * samples it taken before zero crossing
- * for that we are doing succecive approximation 8 times which give the approx number of cycles
+ * for that we are doing successive approximation 8 times which give the approx number of cycles
  * Finally we are applying a filter to get the stable value
  */
 
@@ -505,13 +528,13 @@ void Metrology_perSampleEnergyPulseProcessing(metrologyData *workingData)
 
     totalParams *total = &workingData->totals;
 
-    _iq13 pow;
+    int32_t pow;
 
     if((supportParams & ACTIVE_POWER_SUPPORT) == ACTIVE_POWER_SUPPORT)
     {
-        pow = _IQ13abs(workingData->totals.readings.activePower);
+        pow = _IQ13mpy(_IQ13abs(workingData->totals.readings.activePower), _IQ13(0.1220703125));
 
-        total->energy.activeEnergyPulse.integrator += pow;
+        total->energy.activeEnergyPulse.integrator += (uint64_t)pow;
 
         if(total->energy.activeEnergyPulse.integrator >= TOTAL_ACTIVE_ENERGY_PULSE_THRESHOLD)
         {
@@ -521,7 +544,7 @@ void Metrology_perSampleEnergyPulseProcessing(metrologyData *workingData)
             Metrology_startActiveEnergyPulse(workingData);
         }
 
-        if(total->energy.activeEnergyPulse.pulseRemainingTime && --total->energy.activeEnergyPulse.pulseRemainingTime == 0)
+        if(--total->energy.activeEnergyPulse.pulseRemainingTime == 0)
         {
             Metrology_endActiveEnergyPulse(workingData);
         }
@@ -529,9 +552,9 @@ void Metrology_perSampleEnergyPulseProcessing(metrologyData *workingData)
 
     if((supportParams & REACTIVE_POWER_SUPPORT) == REACTIVE_POWER_SUPPORT)
     {
-        pow = _IQ13abs(workingData->totals.readings.reactivePower);
+        pow = _IQ13mpy(_IQ13abs(workingData->totals.readings.reactivePower), _IQ13(0.1220703125));
 
-        total->energy.reactiveEnergyPulse.integrator += pow;
+        total->energy.reactiveEnergyPulse.integrator += (uint64_t)pow;
 
         if(total->energy.reactiveEnergyPulse.integrator >= TOTAL_REACTIVE_ENERGY_PULSE_THRESHOLD)
         {
@@ -541,7 +564,7 @@ void Metrology_perSampleEnergyPulseProcessing(metrologyData *workingData)
             Metrology_startReactiveEnergyPulse(workingData);
         }
 
-        if(total->energy.reactiveEnergyPulse.pulseRemainingTime && --total->energy.reactiveEnergyPulse.pulseRemainingTime == 0)
+        if(--total->energy.reactiveEnergyPulse.pulseRemainingTime == 0)
         {
             Metrology_endReactiveEnergyPulse(workingData);
         }

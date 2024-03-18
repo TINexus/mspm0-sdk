@@ -53,8 +53,24 @@
 extern "C" {
 #endif
 
-/*! @brief Defines Three phase measurement  */
+/*! @brief Defines Single phase measurement support */
+#undef SINGLE_PHASE_SUPPORT
+/*! @brief Defines Two phase measurement support */
+#undef TWO_PHASE_SUPPORT
+/*! @brief Defines Three phase measurement support */
 #define THREE_PHASE_SUPPORT
+/*! @brief Defines Split phase measurement support */
+#undef SPLIT_PHASE_SUPPORT
+/*! @brief Defines split phase single voltage configuration */
+#undef SPLIT_PHASE_SINGLE_VOLTAGE_CONFIGURATION
+/*! @brief Defines split phase two voltage configuration */
+#undef SPLIT_PHASE_TWO_VOLTAGE_CONFIGURATION
+/*! @brief Defines split phase star configuration */
+#undef SPLIT_PHASE_STAR_CONFIGURATION
+/*! @brief Defines split phase delta configuration */
+#undef SPLIT_PHASE_DELTA_CONFIGURATION
+/*! @brief Defines neutral monitor support */
+#define NEUTRAL_SUPPORT
 /*! @brief Defines ADS channel count    */
 #define ADS_CHANNELCOUNT        (8)
 /*! @brief Defines ADS sample rate  */
