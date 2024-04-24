@@ -67,6 +67,7 @@ void Metrology_initNVData(metrologyData *workingData)
         phase->params.current.currentEndStops = ENDSTOP_HITS_FOR_OVERLOAD;
         phase->params.voltageEndStops = ENDSTOP_HITS_FOR_OVERLOAD;
         phase->params.voltagePeriod.period = (SAMPLES_PER_SECOND / MAINS_NOMINAL_FREQUENCY) << 8;
+        phase->params.voltagePeriod.cyclePeriod = _IQ23div((int32_t)phase->params.voltagePeriod.period,256);
     }
 
     if((supportParams & NEUTRAL_MONITOR_SUPPORT) == NEUTRAL_MONITOR_SUPPORT)

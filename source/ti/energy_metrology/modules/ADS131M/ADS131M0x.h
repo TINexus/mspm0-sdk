@@ -56,6 +56,10 @@
 extern "C" {
 #endif
 
+#ifndef ADS_CHANNELCOUNT
+#define ADS_CHANNELCOUNT            (8)
+#endif
+
 /*! @brief ADS DMA Transfer Done    */
 #define ADS_DMA_TRANSFER_DONE       0x01
 /*! @brief ADS DMA Ready to transfer    */
@@ -315,7 +319,6 @@ typedef enum
     /*! @brief Defines status register word length 32 bit   */
     #define STATUS_WLENGTH_32BIT_MSB_SIGN_EXT ((uint16_t) 0x0003 << 8)
 
-#if (ADS_CHANNELCOUNT > 7)
 
     /*! @brief Defines status register DRDY7 mask   */
     #define STATUS_DRDY7_MASK                 ((uint16_t) 0x0080)
@@ -324,8 +327,6 @@ typedef enum
     /*! @brief Defines status register DRDY7 new data   */
     #define STATUS_DRDY7_NEW_DATA             ((uint16_t) 0x0001 << 7)
 
-#endif
-#if (ADS_CHANNELCOUNT > 6)
 
     /*! @brief Defines status register DRDY6 mask   */
     #define STATUS_DRDY6_MASK                 ((uint16_t) 0x0040)
@@ -334,8 +335,6 @@ typedef enum
     /*! @brief Defines status register DRDY6 new data   */
     #define STATUS_DRDY6_NEW_DATA             ((uint16_t) 0x0001 << 6)
 
-#endif
-#if (ADS_CHANNELCOUNT > 5)
 
     /*! @brief Defines status register DRDY5 mask   */
     #define STATUS_DRDY5_MASK                 ((uint16_t) 0x0020)
@@ -344,8 +343,6 @@ typedef enum
     /*! @brief Defines status register DRDY5 new data   */
     #define STATUS_DRDY5_NEW_DATA             ((uint16_t) 0x0001 << 5)
 
-#endif
-#if (ADS_CHANNELCOUNT > 4)
 
     /*! @brief Defines status register DRDY4 mask   */
     #define STATUS_DRDY4_MASK                 ((uint16_t) 0x0010)
@@ -354,8 +351,6 @@ typedef enum
     /*! @brief Defines status register DRDY4 new data   */
     #define STATUS_DRDY4_NEW_DATA             ((uint16_t) 0x0001 << 4)
 
-#endif
-#if (ADS_CHANNELCOUNT > 3)
 
     /*! @brief Defines status register DRDY3 mask   */
     #define STATUS_DRDY3_MASK                 ((uint16_t) 0x0008)
@@ -364,8 +359,6 @@ typedef enum
     /*! @brief Defines status register DRDY3 new data   */
     #define STATUS_DRDY3_NEW_DATA             ((uint16_t) 0x0001 << 3)
 
-#endif
-#if (ADS_CHANNELCOUNT > 2)
 
     /*! @brief Defines status register DRDY2 mask   */
     #define STATUS_DRDY2_MASK                 ((uint16_t) 0x0004)
@@ -374,8 +367,6 @@ typedef enum
     /*! @brief Defines status register DRDY2 new data   */
     #define STATUS_DRDY2_NEW_DATA             ((uint16_t) 0x0001 << 2)
 
-#endif
-#if (ADS_CHANNELCOUNT > 1)
 
     /*! @brief Defines status register DRDY1 mask   */
     #define STATUS_DRDY1_MASK                 ((uint16_t) 0x0002)
@@ -383,8 +374,6 @@ typedef enum
     #define STATUS_DRDY1_NO_NEW_DATA          ((uint16_t) 0x0000 << 1)
     /*! @brief Defines status register DRDY1 new data   */
     #define STATUS_DRDY1_NEW_DATA             ((uint16_t) 0x0001 << 1)
-
-#endif
 
     /*! @brief Defines status register DRDY0 mask   */
     #define STATUS_DRDY0_MASK                 ((uint16_t) 0x0001)
@@ -523,7 +512,6 @@ typedef enum
     #define CLOCK_DEFAULT                                                   ((uint16_t) 0x010E)
     #endif
 
-#if (ADS_CHANNELCOUNT > 7)
 
     /*! @brief Defines clock register CH7 EN mask  */
     #define CLOCK_CH7_EN_MASK                                               ((uint16_t) 0x8000)
@@ -532,8 +520,6 @@ typedef enum
     /*! @brief Defines clock register CH7 EN enabled  */
     #define CLOCK_CH7_EN_ENABLED                                            ((uint16_t) 0x0001 << 15)
 
-#endif
-#if (ADS_CHANNELCOUNT > 6)
 
     /*! @brief Defines clock register CH6 EN mask  */
     #define CLOCK_CH6_EN_MASK                                               ((uint16_t) 0x4000)
@@ -542,8 +528,6 @@ typedef enum
     /*! @brief Defines clock register CH6 EN enabled  */
     #define CLOCK_CH6_EN_ENABLED                                            ((uint16_t) 0x0001 << 14)
 
-#endif
-#if (ADS_CHANNELCOUNT > 5)
 
     /*! @brief Defines clock register CH5 EN mask  */
     #define CLOCK_CH5_EN_MASK                                               ((uint16_t) 0x2000)
@@ -552,8 +536,6 @@ typedef enum
     /*! @brief Defines clock register CH5 EN enabled  */
     #define CLOCK_CH5_EN_ENABLED                                            ((uint16_t) 0x0001 << 13)
 
-#endif
-#if (ADS_CHANNELCOUNT > 4)
 
     /*! @brief Defines clock register CH4 EN mask  */
     #define CLOCK_CH4_EN_MASK                                               ((uint16_t) 0x1000)
@@ -562,8 +544,6 @@ typedef enum
     /*! @brief Defines clock register CH4 EN enabled  */
     #define CLOCK_CH4_EN_ENABLED                                            ((uint16_t) 0x0001 << 12)
 
-#endif
-#if (ADS_CHANNELCOUNT > 3)
 
     /*! @brief Defines clock register CH3 EN mask  */
     #define CLOCK_CH3_EN_MASK                                               ((uint16_t) 0x0800)
@@ -572,8 +552,6 @@ typedef enum
     /*! @brief Defines clock register CH3 EN enabled  */
     #define CLOCK_CH3_EN_ENABLED                                            ((uint16_t) 0x0001 << 11)
 
-#endif
-#if (ADS_CHANNELCOUNT > 2)
 
     /*! @brief Defines clock register CH2 EN mask  */
     #define CLOCK_CH2_EN_MASK                                               ((uint16_t) 0x0400)
@@ -582,8 +560,6 @@ typedef enum
     /*! @brief Defines clock register CH2 EN enabled  */
     #define CLOCK_CH2_EN_ENABLED                                            ((uint16_t) 0x0001 << 10)
 
-#endif
-#if (ADS_CHANNELCOUNT > 1)
 
     /*! @brief Defines clock register CH1 EN mask  */
     #define CLOCK_CH1_EN_MASK                                               ((uint16_t) 0x0200)
@@ -592,7 +568,6 @@ typedef enum
     /*! @brief Defines clock register CH1 EN enabled  */
     #define CLOCK_CH1_EN_ENABLED                                            ((uint16_t) 0x0001 << 9)
 
-#endif
 
     /*! @brief Defines clock register CH0 EN mask  */
     #define CLOCK_CH0_EN_MASK                                               ((uint16_t) 0x0100)
@@ -766,7 +741,6 @@ typedef enum
     /*! @brief Defines GAIN2 register Default */
     #define GAIN2_DEFAULT                                                   ((uint16_t) 0x0000)
 
-#if (ADS_CHANNELCOUNT > 4)
 
     /*! @brief Defines GAIN2 register reserved0 mask */
     #define GAIN2_RESERVED0_MASK                                            ((uint16_t) 0x8000)
@@ -856,7 +830,6 @@ typedef enum
     /*! @brief Defines GAIN2 register PGAGAIN4 128 */
     #define GAIN2_PGAGAIN4_128                                              ((uint16_t) 0x0007 << 0)
 
-#endif
 
 
 
@@ -1160,8 +1133,6 @@ typedef enum
 
 
 
-#if (ADS_CHANNELCOUNT > 1)
-
 /* Register 0x0E (CH1_CFG) definition
  * -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
  * |   Bit 15   |   Bit 14   |   Bit 13   |   Bit 12   |   Bit 11   |   Bit 10   |    Bit 9   |    Bit 8   |    Bit 7   |    Bit 6   |    Bit 5   |    Bit 4   |    Bit 3   |    Bit 2   |    Bit 1   |    Bit 0   |
@@ -1271,9 +1242,6 @@ typedef enum
     #define CH1_GCAL_LSB_RESERVED0_MASK                                     ((uint16_t) 0x00FF)
 
 
-
-#endif
-#if (ADS_CHANNELCOUNT > 2)
 
 /* Register 0x13 (CH2_CFG) definition
  * -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -1385,9 +1353,6 @@ typedef enum
 
 
 
-#endif
-#if (ADS_CHANNELCOUNT > 3)
-
 /* Register 0x18 (CH3_CFG) definition
  * -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
  * |   Bit 15   |   Bit 14   |   Bit 13   |   Bit 12   |   Bit 11   |   Bit 10   |    Bit 9   |    Bit 8   |    Bit 7   |    Bit 6   |    Bit 5   |    Bit 4   |    Bit 3   |    Bit 2   |    Bit 1   |    Bit 0   |
@@ -1497,9 +1462,6 @@ typedef enum
     #define CH3_GCAL_LSB_RESERVED0_MASK                                     ((uint16_t) 0x00FF)
 
 
-
-#endif
-#if (ADS_CHANNELCOUNT > 4)
 
 /* Register 0x1D (CH4_CFG) definition
  * -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -1611,9 +1573,6 @@ typedef enum
 
 
 
-#endif
-#if (ADS_CHANNELCOUNT > 5)
-
 /* Register 0x22 (CH5_CFG) definition
  * -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
  * |   Bit 15   |   Bit 14   |   Bit 13   |   Bit 12   |   Bit 11   |   Bit 10   |    Bit 9   |    Bit 8   |    Bit 7   |    Bit 6   |    Bit 5   |    Bit 4   |    Bit 3   |    Bit 2   |    Bit 1   |    Bit 0   |
@@ -1723,9 +1682,6 @@ typedef enum
     #define CH5_GCAL_LSB_RESERVED0_MASK                                     ((uint16_t) 0x00FF)
 
 
-
-#endif
-#if (ADS_CHANNELCOUNT > 6)
 
 /* Register 0x27 (CH6_CFG) definition
  * -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -1837,9 +1793,6 @@ typedef enum
 
 
 
-#endif
-#if (ADS_CHANNELCOUNT > 7)
-
 /* Register 0x2C (CH7_CFG) definition
  * -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
  * |   Bit 15   |   Bit 14   |   Bit 13   |   Bit 12   |   Bit 11   |   Bit 10   |    Bit 9   |    Bit 8   |    Bit 7   |    Bit 6   |    Bit 5   |    Bit 4   |    Bit 3   |    Bit 2   |    Bit 1   |    Bit 0   |
@@ -1949,7 +1902,6 @@ typedef enum
     #define CH7_GCAL_LSB_RESERVED0_MASK                                     ((uint16_t) 0x00FF)
 
 
-#endif
 
 /* Register 0x3E (REGMAP_CRC) definition
  * -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------

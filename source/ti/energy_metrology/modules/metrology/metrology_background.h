@@ -52,6 +52,9 @@
 extern "C" {
 #endif
 
+/*! @brief Defines 2 * PI   */
+#define PI2  _IQ23(6.28318530718)
+
 /*!
  * @brief Metrology per phase sampling
  * @param[in] workingData The metrology data

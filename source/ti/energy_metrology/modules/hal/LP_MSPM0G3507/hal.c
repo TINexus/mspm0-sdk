@@ -61,10 +61,17 @@ DL_SPI_CHIP_SELECT  SPICS[HAL_SPI_CS_MAX];
 HAL_UARTInstance    UARTChannel[HAL_UART_CHAN_MAX];
 
 /*!
+ * @brief Stores the CRC instances
+ */
+HAL_CRCInstance     crcModule[HAL_CRC_MAX];
+
+/*!
  * @brief  Initializes the hal module
  */
 void HAL_init()
 {
+    crcModule[HAL_CRC_0].inst       = CRC;
+
     SPIChannel[HAL_SPI_CHAN_0].inst        = GEN_SPI_0_INST;
     SPIChannel[HAL_SPI_CHAN_0].dmaChanIdTx = DMA_CH0_CHAN_ID;
     SPIChannel[HAL_SPI_CHAN_0].dmaChanIdRx = DMA_CH1_CHAN_ID;
@@ -300,7 +307,7 @@ int HAL_copyMemoryBlock(void *dstAddr, void *srcAddr, int len, HAL_MEMORY_BLOCK_
            return -1;
        }
 
-        DL_FlashCTL_programMemoryBlocking64WithECCGenerated(FLASHCTL, (uint32_t) dstAddr, (uint32_t *) srcAddr,
+       DL_FlashCTL_programMemoryBlockingFromRAM64WithECCGenerated(FLASHCTL, (uint32_t) dstAddr, (uint32_t *) srcAddr,
            prog64length, DL_FLASHCTL_REGION_SELECT_MAIN);
         DL_FlashCTL_waitForCmdDone(FLASHCTL);
     }
@@ -308,7 +315,7 @@ int HAL_copyMemoryBlock(void *dstAddr, void *srcAddr, int len, HAL_MEMORY_BLOCK_
     if(remainder)
     {
         DL_FlashCTL_unprotectSector(FLASHCTL, startAddr, DL_FLASHCTL_REGION_SELECT_MAIN);
-        DL_FlashCTL_programMemory64WithECCGenerated(FLASHCTL, (uint32_t) (((uint32_t *) dstAddr) + (prog64bytes * 2)), (uint32_t *) pad);
+        DL_FlashCTL_programMemoryFromRAM64WithECCGenerated(FLASHCTL, (uint32_t) (((uint32_t *) dstAddr) + (prog64bytes * 2)), (uint32_t *) pad);
     }
     DL_FlashCTL_waitForCmdDone(FLASHCTL);
 
@@ -354,4 +361,32 @@ void HAL_setRTC(const uint8_t buf[6])
 
     DL_RTC_enableClockControl(RTC);
 }
+
+/*!
+ * @brief Get CRC out
+ * @param[in] chan The CRC module
+ */
+uint16_t HAL_getCRCOut(HAL_CRC chan)
+{
+    CRC_Regs *crc = crcModule[chan].inst;
+    return DL_CRC_getResult16(crc);
+}
+
+/*!
+ * @brief Get CRC out
+ * @param[in] chan The CRC module
+ * @param[in] value CRC SEED value
+ */
+void HAL_setCRCSeed(HAL_CRC chan, uint16_t value)
+{
+    CRC_Regs *crc = crcModule[chan].inst;
+    DL_CRC_setSeed16(crc, value);
+}
+
+void HAL_enableUARTInterrupt(HAL_UART_CHAN Chan)
+{
+    UART_Regs *uart = UARTChannel[Chan].inst;
+    DL_UART_Main_enableInterrupt(uart, DL_UART_MAIN_INTERRUPT_TX);
+}
+
 

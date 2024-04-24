@@ -184,7 +184,7 @@ int32_t Metrology_ddsSinLookup(uint32_t phase)
  */
 void Metrology_startActiveEnergyPulse(metrologyData *workingData)
 {
-    HAL_writeGPIOPin(workingData->activePulse, 1);
+    HAL_writeGPIOPin(workingData->activePulse, 0);
 }
 
 /*!
@@ -193,7 +193,7 @@ void Metrology_startActiveEnergyPulse(metrologyData *workingData)
  */
 void Metrology_endActiveEnergyPulse(metrologyData *workingData)
 {
-    HAL_writeGPIOPin(workingData->activePulse, 0);
+    HAL_writeGPIOPin(workingData->activePulse, 1);
 }
 
 /*!
@@ -202,7 +202,7 @@ void Metrology_endActiveEnergyPulse(metrologyData *workingData)
  */
 void Metrology_startReactiveEnergyPulse(metrologyData *workingData)
 {
-    HAL_writeGPIOPin(workingData->reactivePulse, 1);
+    HAL_writeGPIOPin(workingData->reactivePulse, 0);
 }
 
 /*!
@@ -211,7 +211,7 @@ void Metrology_startReactiveEnergyPulse(metrologyData *workingData)
  */
 void Metrology_endReactiveEnergyPulse(metrologyData *workingData)
 {
-    HAL_writeGPIOPin(workingData->reactivePulse, 0);
+    HAL_writeGPIOPin(workingData->reactivePulse, 1);
 }
 
 /*!
@@ -259,6 +259,15 @@ void Metrology_perSampleProcessing(metrologyData *workingData)
             phase->params.voltageEndStops--;
         }
         voltageSample = metrology_dcFilter(&(phase->params.V_dc_estimate), voltageSample);
+
+#ifdef ROGOSWKI_SUPPORT
+        /*
+         * With rogowski coils, current samples will pass through 2 filters, to compensate the
+         * delay between voltage and current samples, voltage samples are also passed through
+         * 2 filters.
+         */
+        voltageSample = metrology_dcFilter(&(phase->params.V_dc_estimate1), voltageSample);
+#endif
 
         if((supportedParams & VRMS_SUPPORT) == VRMS_SUPPORT)
         {
@@ -317,8 +326,26 @@ void Metrology_perSampleProcessing(metrologyData *workingData)
         }
 
         currentDP = &phase->params.current.dotProd[dp];
-        _iq23 currentData = workingData->rawCurrentData[ph];
-        currentSample = metrology_dcFilter(&(phase->params.current.I_dc_estimate), phase->params.current.IHistory[0]);
+
+        _iq23 currentData;
+        _iq23 inputCurrent;
+        _iq23 integratorOutput;
+
+#ifdef ROGOSWKI_SUPPORT
+        inputCurrent = metrology_dcFilter(&(phase->params.current.I_dc_estimate), workingData->rawCurrentData[ph]);
+        _iq23 intnewcurrent = (inputCurrent + workingData->lastRawCurrentData[ph])/2;
+        workingData->lastRawCurrentData[ph] = inputCurrent;
+
+        workingData->currentIntegrationData[ph] += _IQ23div(intnewcurrent, phase->params.voltagePeriod.cyclePeriod);
+
+        currentData = metrology_dcFilter(&(phase->params.current.I_dc_estimate_integral), workingData->currentIntegrationData[ph]);
+
+#else
+        currentData = metrology_dcFilter(&(phase->params.current.I_dc_estimate), workingData->rawCurrentData[ph]);
+#endif
+
+        currentSample = phase->params.current.IHistory[0];
+
         if((currentSample >= I_ADC_MAX || currentSample <= I_ADC_MIN) && phase->params.current.currentEndStops)
         {
             phase->params.current.currentEndStops--;
@@ -447,6 +474,7 @@ void Metrology_perSampleProcessing(metrologyData *workingData)
                         /* start next cycle count */
                         phase->params.voltagePeriod.cycleSamples = z;
                         phaseDP->cycleNumber++;
+                        phase->params.voltagePeriod.cyclePeriod = _IQ23div(_IQ23div((int32_t)phase->params.voltagePeriod.period,256),PI2);
                     }
                     else
                     {

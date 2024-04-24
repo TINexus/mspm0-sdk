@@ -624,10 +624,10 @@ void ADS_verifyADSCRC(ADS_Instance *adsHandle, ADS_channelData *adsData)
     /* HW CRC check */
     volatile uint16_t CRCResult;
 
-    DL_CRC_setSeed16(CRC, CRC_SEED);
-    memcpy((void*) CRC_IN_ADDRESS, &adsHandle->rawdata, (ADS_CMDLENGTH + ADS_CHANNELCOUNT) * ADS_WORDLENGTH);
-    CRCResult = CRC->CRCOUT;
+    HAL_setCRCSeed(HAL_CRC_0, 0xFFFF);
 
+    memcpy((void*) CRC_IN_ADDRESS, &adsHandle->rawdata, (ADS_CMDLENGTH + ADS_CHANNELCOUNT) * ADS_WORDLENGTH);
+    CRCResult = HAL_getCRCOut(HAL_CRC_0);
     if(adsData->crc == CRCResult)
     {
         adsHandle->crcPassCount++;

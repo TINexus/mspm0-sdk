@@ -69,7 +69,7 @@ extern "C" {
 #define FALSE   0x0
 
 /*! @brief Defines the system clock frequency, MHz */
-#define HAL_SYSTEM_FREQ_MHZ                         ((int32_t)80)
+#define HAL_SYSTEM_FREQ_MHZ        ((int32_t)80)
 /*! @brief Defines CRC_IN memory address    */
 #define CRC_IN_ADDRESS             0x40441800
 
@@ -118,7 +118,11 @@ extern "C" {
 typedef enum
 {
     /*! @brief Memory block start address   */
+#ifdef CONFIG_MSPM0G350X
     HAL_MEMORY_BLOCK_STARTADDR01 = 0x0001FC00
+#else 
+    HAL_MEMORY_BLOCK_STARTADDR01 = 0x0000FC00 
+#endif
 }HAL_MEMORY_BLOCK_STARTADDR;
 
 /*! @enum HAL_GPIO_STATE*/
@@ -206,6 +210,15 @@ typedef enum
     HAL_DMA_CHAN_MAX
 }HAL_DMA_CHAN;
 
+/*! @enum HAL_CRC   */
+typedef enum
+{
+    /*! @brief Index associated to CRC 0 */
+    HAL_CRC_0 = 0,
+    /*! @brief CRC count */
+    HAL_CRC_MAX
+}HAL_CRC;
+
 /*! @brief Defines a GPIO instance  */
 typedef struct HAL_GPIO_Instance_
 {
@@ -240,6 +253,12 @@ typedef struct HAL_UARTInstance_
     /*! @brief DMA channel for UART Receive */
     HAL_DMA_CHAN  dmaChanIdRx;
 }HAL_UARTInstance;
+
+/*! @brief Defines a CRC instance  */
+typedef struct HAL_CRCInstance_
+{
+    CRC_Regs     *inst;
+}HAL_CRCInstance;
 
 extern HAL_GPIOInstance    gpioInputPin[HAL_GPIO_IN_MAX];
 
@@ -350,6 +369,22 @@ void HAL_getRTC(uint8_t buf[6]);
  * @param[in] buf[] buffer to store clock data
  */
 void HAL_setRTC(const uint8_t buf[6]);
+
+/*!
+ * @brief Get CRC out
+ * @param[in] chan The CRC module
+ */
+uint16_t HAL_getCRCOut(HAL_CRC chan);
+
+/*!
+ * @brief Get CRC out
+ * @param[in] chan The CRC module
+ * @param[in] value CRC SEED value
+ */
+void HAL_setCRCSeed(HAL_CRC chan, uint16_t value);
+
+
+void HAL_enableUARTInterrupt(HAL_UART_CHAN Chan);
 
 #ifdef __cplusplus
 }

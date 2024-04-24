@@ -213,6 +213,8 @@ typedef struct
 {
     /*! @brief current dc estimate  */
     int64_t I_dc_estimate;
+    /*! @brief current dc estimate after integration */
+    int64_t I_dc_estimate_integral;
     /*! @brief current dc estimate logged  */
     int32_t I_dc_estimate_logged;
     /*! @brief current dot product sets  */
@@ -234,8 +236,10 @@ typedef struct
 {
     /*! @brief samples in cycle */
     uint32_t cycleSamples;
-    /*! @brief cycle period */
+    /*! @brief cycle period in multiples of 256 */
     uint32_t period;
+    /*! @brief cycle period in fraction */
+    _iq23 cyclePeriod;
 }mainsParams;
 
 /*! @brief Defines Phase parameters */
@@ -243,6 +247,8 @@ typedef struct
 {
     /*! @brief DC voltage estimate  */
     int64_t V_dc_estimate;
+    /*! @brief DC voltage estimate 1 */
+    int64_t V_dc_estimate1;
     /*! @brief DC voltage estimate logged */
     int32_t V_dc_estimate_logged;
     /*! @brief Array to store voltage history  */
@@ -440,6 +446,10 @@ typedef struct
     _iq23 rawVoltageData[MAX_PHASES];
     /*! @brief stores raw current data  */
     _iq23 rawCurrentData[MAX_PHASES];
+    /*! @brief stores last raw current data  */
+    _iq23 lastRawCurrentData[MAX_PHASES];
+    /*! @brief stores current integration data  */
+    _iq23 currentIntegrationData[MAX_PHASES];
     /*! @brief stores raw neutral data  */
     _iq23 rawNeutralData;
     /*! @brief Metrology status */

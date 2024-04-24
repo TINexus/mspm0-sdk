@@ -8,7 +8,7 @@ LNK = "$(TICLANG_ARMCOMPILER)/bin/tiarmclang"
 OBJECTS = main.obj sasi_app.obj ticlang_startup_mspm0l130x_ticlang.obj
 NAME = air_quality_sensing
 
-CFLAGS = -I.. \
+CFLAGS += -I.. \
     -DN_PULSE_INT \
     -DVCHOP_INTCHOP \
     -D__MSPM0L1306__ \
@@ -21,16 +21,17 @@ CFLAGS = -I.. \
     -mfloat-abi=soft \
     -mthumb
 
-LFLAGS = "-l$(MSPM0_SDK_INSTALL_DIR)/source/ti/sasi_smoke_detector/lib/ticlang/m0p/vchop_intchop_n_int.a" \
+LFLAGS += "-l$(MSPM0_SDK_INSTALL_DIR)/source/ti/sasi_smoke_detector/lib/ticlang/m0p/vchop_intchop_n_int.a" \
     "-l$(MSPM0_SDK_INSTALL_DIR)/source/ti/driverlib/lib/ticlang/m0p/mspm0l11xx_l13xx/driverlib.a" \
     "-L$(MSPM0_SDK_INSTALL_DIR)/source" \
-    -L${PROJECT_ROOT} \
+    -L.. \
     ../ticlang/mspm0l1306.cmd \
     "-Wl,-m,$(NAME).map" \
     -Wl,--rom_model \
     -Wl,--warn_sections \
     "-L$(TICLANG_ARMCOMPILER)/lib" \
     -llibc.a
+
 all: $(NAME).out
 
 main.obj: ../main.c

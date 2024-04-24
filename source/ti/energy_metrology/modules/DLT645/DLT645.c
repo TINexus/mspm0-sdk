@@ -205,7 +205,7 @@ void __attribute__((section(".TI.ramfunc"))) DLT645_serialWrite(DLT645Buf *dlt64
     dlt645->txMsg.ptr = 0;
     dlt645->txMsg.len = len;
 
-    DL_UART_Main_enableInterrupt(UART_0_INST, DL_UART_MAIN_INTERRUPT_TX);
+    HAL_enableUARTInterrupt(dlt645->uartChan);
 }
 
 /*!
