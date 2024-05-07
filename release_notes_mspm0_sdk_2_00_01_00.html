@@ -59,19 +59,19 @@
 <h2 id="introduction">Introduction</h2>
 <p>The MSPM0 SDK delivers components that enable engineers to develop applications on Texas Instruments MSPM0 microcontroller devices. The product is comprised of multiple software components and examples of how to use these components together. In addition, examples are provided to demonstrate the use of each functional area and each supported device and as a starting point for your own projects.</p>
 <p>The MSPM0 MCU portfolio offers a single development environment that delivers flexible hardware, software and tool options for customers developing applications. A one-time investment with the MSPM0 software development kit (SDK) allows you create portable and modular code, opening the door to create unlimited applications. For more information, visit <a href="https://www.ti.com/mspm0">www.ti.com/mspm0</a>.</p>
-<p>This is version 2.00.00.03 of the MSPM0 SDK.</p>
+<p>This is version 2.00.01.00 of the MSPM0 SDK.</p>
 <h2 id="documentation">Documentation</h2>
 <ul>
 <li><a href="docs/english/MSPM0_SDK_Documentation_Overview.html">MSPM0 SDK Documentation Overview</a></li>
 <li><a href="docs/chinese/MSPM0_SDK_Documentation_Overview_CN.html">MSPM0 SDK Documentation Overview - Chinese</a></li>
 <li><a href="known_issues_FAQ.html">MSPM0 SDK Known Issues and FAQ</a></li>
-<li><a href="license_mspm0_sdk_2_00_00_03.txt">Software License</a></li>
-<li><a href="manifest_mspm0_sdk_2_00_00_03.html">Software Manifest</a></li>
+<li><a href="license_mspm0_sdk_2_00_01_00.txt">Software License</a></li>
+<li><a href="manifest_mspm0_sdk_2_00_01_00.html">Software Manifest</a></li>
 </ul>
 <h2 id="whats-included">What’s Included</h2>
-<p>The MSPM0 SDK 2.00.00.03 includes the following:</p>
+<p>The MSPM0 SDK 2.00.01.00 includes the following:</p>
 <ul>
-<li><strong>DriverLib Library</strong> - v1.31.00:
+<li><strong>DriverLib Library</strong> - v1.31.01:
 <ul>
 <li>Full support including header files for:
 <ul>
@@ -86,7 +86,7 @@
 <ul>
 <li>Hundreds of examples from low-level drivers to middleware and demos</li>
 </ul></li>
-<li><strong>SysConfig</strong> - v1.31.00:
+<li><strong>SysConfig</strong> - v1.31.01:
 <ul>
 <li>Support for code generation of all DriverLib peripherals</li>
 <li>Clock Tree for easier configuration of Clock System</li>
@@ -139,6 +139,71 @@
 <p><strong>For more information about these features, please visit the <a href="docs/english/MSPM0_SDK_Documentation_Overview.html">MSPM0 SDK Documentation Overview</a> or <a href="docs/chinese/MSPM0_SDK_Documentation_Overview_CN.html">MSPM0 SDK Documentation Overview - Chinese</a>.</strong></p>
 <h2 id="whats-new">What’s New</h2>
 <p>This release includes the following updates.</p>
+<ul>
+<li><strong>DriverLib Library</strong> - v1.31.01
+<ul>
+<li>MSPSWSDK-3804: Fixed issue with case statement for 1-4 mux mode in DL_LCD_setPinAsCommon API in dl_lcd.c</li>
+</ul></li>
+<li><strong>SysConfig</strong> - v1.31.01
+<ul>
+<li>MSPSWSDK-3791: Fixed MCAN peripheral not being available for the MSPM0G310X devices</li>
+</ul></li>
+</ul>
+<h2 id="operating-systems-support">Operating Systems Support</h2>
+<ul>
+<li>Windows 11</li>
+<li>Ubuntu 18.04</li>
+<li>macOS Monterey</li>
+</ul>
+<h2 id="dependencies">Dependencies</h2>
+<p>This release was validated with the following components:</p>
+<ul>
+<li>Code Composer Studio
+<ul>
+<li><a href="https://www.ti.com/tool/CCSTUDIO">Code Composer Studio (CCS) Theia 1.3.1</a>.</li>
+<li><a href="https://www.ti.com/tool/CCSTUDIO">Code Composer Studio (CCS) 12.7.0</a>.</li>
+</ul></li>
+<li>TI Arm Clang Compiler
+<ul>
+<li><a href="https://www.ti.com/tool/ARM-CGT">TI Clang v3.2.1_LTS</a>. Also included with CCS 12.7.0 and CCS Theia 1.2.</li>
+</ul></li>
+<li>SysConfig
+<ul>
+<li><a href="https://www.ti.com/tool/SYSCONFIG">SysConfig 1.20.x</a>. Also included with CCS 12.7.0.</li>
+</ul></li>
+<li>GNU Code Generation Tools
+<ul>
+<li><a href="https://launchpad.net/gcc-arm-embedded/+milestone/9-2019-q4-major">Arm gcc-arm-none-eabi-9-2019-q4-major</a>.</li>
+</ul></li>
+<li>IAR Embedded Workbench
+<ul>
+<li><a href="https://www.iar.com/iar-embedded-workbench/">IAR for Arm 9.50.2</a>.</li>
+</ul></li>
+<li>Keil uVision
+<ul>
+<li><a href="https://www2.keil.com/mdk5">5.38</a>, with Arm Clang compiler v6.16 or later.</li>
+</ul></li>
+</ul>
+<h2 id="device-support">Device Support</h2>
+<ul>
+<li>MSPM0L11xx/L13xx: Tested on production silicon.</li>
+<li>MSPM0G1x0x/G3x0x: Tested on production silicon.</li>
+<li>MSPM0C110x: Preliminary support.</li>
+<li>MSPS003FX: Preliminary support.</li>
+<li>MSPM0L122x/L222x: Preliminary support.</li>
+</ul>
+<h2 id="known-issues">Known Issues</h2>
+<p>Please refer to the <a href="known_issues_FAQ.html">MSPM0 SDK Known Issues and FAQ</a> document for a detailed list of known issues and workarounds.</p>
+<h2 id="upgrade-and-compatibility-information">Upgrade and Compatibility Information</h2>
+<ul>
+<li>Not applicable for this release.</li>
+</ul>
+<h2 id="previous-releases">Previous Releases</h2>
+<p>The updates for the past releases starting at MSPM0 SDK 2.00 and later are shown below.</p>
+<p>The updates and compatibility information prior to MSPM0 SDK 2.00 can be viewed at <a href="https://dev.ti.com/tirex/explore/node?a=a3PaaoK__1.30.00.03&amp;node=A__ADMjnimJ4C5BfFnmM3X-jg__MSPM0-SDK__a3PaaoK__1.30.00.03">TI Resource Explorer</a>.</p>
+<h3 id="previous-updates">Previous Updates</h3>
+<ul>
+<li>2.00.00.03
 <ul>
 <li><strong>DriverLib Library</strong> - v1.31.00
 <ul>
@@ -314,53 +379,11 @@
 <ul>
 <li>MSPSWSDK-3746: Updated MSPM0 BSL GUI tooling to remove the BSL GUI executable, and instead added batch file and instructions on how to build the GUI</li>
 </ul></li>
-</ul>
-<h2 id="operating-systems-support">Operating Systems Support</h2>
-<ul>
-<li>Windows 10</li>
-<li>Ubuntu 18.04</li>
-<li>macOS Monterey</li>
-</ul>
-<h2 id="dependencies">Dependencies</h2>
-<p>This release was validated with the following components:</p>
-<ul>
-<li>Code Composer Studio
-<ul>
-<li><a href="https://www.ti.com/tool/CCSTUDIO">Code Composer Studio (CCS) Theia 1.3.1</a>.</li>
-<li><a href="https://www.ti.com/tool/CCSTUDIO">Code Composer Studio (CCS) 12.7.0</a>.</li>
-</ul></li>
-<li>TI Arm Clang Compiler
-<ul>
-<li><a href="https://www.ti.com/tool/ARM-CGT">TI Clang v3.2.1_LTS</a>. Also included with CCS 12.7.0 and CCS Theia 1.2.</li>
-</ul></li>
-<li>SysConfig
-<ul>
-<li><a href="https://www.ti.com/tool/SYSCONFIG">SysConfig 1.20.x</a>. Also included with CCS 12.7.0.</li>
-</ul></li>
-<li>GNU Code Generation Tools
-<ul>
-<li><a href="https://launchpad.net/gcc-arm-embedded/+milestone/9-2019-q4-major">Arm gcc-arm-none-eabi-9-2019-q4-major</a>.</li>
-</ul></li>
-<li>IAR Embedded Workbench
-<ul>
-<li><a href="https://www.iar.com/iar-embedded-workbench/">IAR for Arm 9.50.2</a>.</li>
-</ul></li>
-<li>Keil uVision
-<ul>
-<li><a href="https://www2.keil.com/mdk5">5.38</a>, with Arm Clang compiler v6.16 or later.</li>
 </ul></li>
 </ul>
-<h2 id="device-support">Device Support</h2>
+<h3 id="previous-upgrade-and-compatibility">Previous Upgrade and Compatibility</h3>
 <ul>
-<li>MSPM0L11xx/L13xx: Tested on production silicon.</li>
-<li>MSPM0G1x0x/G3x0x: Tested on production silicon.</li>
-<li>MSPM0C110x: Preliminary support.</li>
-<li>MSPS003FX: Preliminary support.</li>
-<li>MSPM0L122x/L222x: Preliminary support.</li>
-</ul>
-<h2 id="known-issues">Known Issues</h2>
-<p>Please refer to the <a href="known_issues_FAQ.html">MSPM0 SDK Known Issues and FAQ</a> document for a detailed list of known issues and workarounds.</p>
-<h2 id="upgrade-and-compatibility-information">Upgrade and Compatibility Information</h2>
+<li>2.00.00.03
 <ul>
 <li>SMBus Library - v2.00.00
 <ul>
@@ -413,465 +436,6 @@
 <li>No additional bugs or features were addressed on this release. Developers can continue with previous version, unless any of these features is desired.</li>
 </ul></li>
 </ul></li>
-</ul>
-<h2 id="previous-releases">Previous Releases</h2>
-<p>The updates for the past releases are shown below.</p>
-<h3 id="whats-new-1">What’s New</h3>
-<ul>
-<li>1.30.00.03
-<ul>
-<li>New device support for the MSPM0L122x/L222x devices, and corresponding LP-MSPM0L2228 EVM.</li>
-<li>MSPSWSDK-3330: Fixed issue in dl_gpio.h with DL_GPIO_writePinsVal API not properly masking the value to write, causing possible invalid writes to other registers</li>
-<li>MSPSWSDK-3365: Fixed issue in multiple SoC SYSCTL DriverLibs with incorrect value for DL_SYSCTL_HFCLK_MFPCLK_DIVIDER_8 enum</li>
-<li>MSPSWSDK-3327: Updated dl_comp.h with missing value in DL_COMP_REF_SOURCE enum</li>
-<li>MSPSWSDK-3405: Updated some incorrect comments in multiple SoC SYSCTL DriverLibs with comments for DL_SYSCTL_RESET_BOOTLOADER_* macros</li>
-<li>MSPSWSDK-3393: Fixed issue in dl_adc12.h where some APIs were attempting to write to the CLKCFG register without writing the key value, resulting in the APIs not working</li>
-<li>MSPSWSDK-3351: Fixed incorrect flash size in MSPS003f3 linker command files</li>
-<li>MSPSWSDK-3339: Updated default GCC linker files used in code examples to avoid linker error in ARM.exidx section yb removing erroneous aligns inside special linker block</li>
-<li>MSPSWSDK-3343: Updated default GCC linker files used in code examples to load the virtual table at runtime</li>
-<li>MSPSWSDK-2680: Updated default GCC linker and startup files used in code examples to properly compile for C++.</li>
-<li>Added new Customer Secure Code (CSC) example leveraging the MSPM0L122x/L222x advanced security mechanisms. The example utilizes bank-swapping and CMAC for quicker booting, and can be made immutable acting as part of the Root of Trust (RoT) chain during boot.</li>
-<li>Added secure bootloader example image for MSPM0L122x/L222x. The bootloader is part of the application image and can be entered in order to provide an update over UART and is compatible with UniFlash. At the conclusion of loading the image. The device will self boot reset and enter the CSC to validate the new image and jump to it.</li>
-<li>MSPSWSDK-3445: Added new MSP subsystems:
-<ul>
-<li>dac8_dma_function_generator</li>
-<li>uart_to_spi_bridge</li>
-</ul></li>
-<li>MSPSWSDK-3382: Fixed issue where MSPM0C code examples for Keil did not have the default DLL included</li>
-<li>MSPSWSDK-2329: Updated MSPM0L11xx/L13xx code examples for Keil to remove MPU option, because these devices do not have an MPU</li>
-<li>MSPSWSDK-3423: Fixed build error for blink_led IAR code example where .ewp file was missing files for FreeRTOS kernel</li>
-<li>MSPSWSDK-3437: Multiple updates and bug fixes for the BSL examples</li>
-<li>EEPROM Library</li>
-<li>MSPSWSDK-3310: Fixed issue where EEPROM_TypeA_searchCheck API was not properly updating active record bounds values before checking if the active record was valid</li>
-<li>MSPSWSDK-3296: Implemented Device Reset feature for SMBus Library. Added footprint to documentation.</li>
-<li>MSPSWSDK-3435: Fixed SMBus state machine to handle race condition between interrupts</li>
-<li>MSPSWSDK-3436: Updated PMBus library and examples to use SMBus 1.30.00.xx. Added footprint to documentation and updated examples to use LaunchPad layout.</li>
-<li>MSPSWSDK-3371: Fixed code generation where SampleTime0cycle was generating a floating point value instead of an integer value</li>
-<li>MSPSWSDK-3374: Fixed code generation issue where COMP IOMUX macro definitions were not generated if using DAC12 input</li>
-<li>MSPSWSDK-3127: Fixed issue where when switching from one device that has a larger number of event channels, to a device with a smaller number, would cause a SysConfig tool error</li>
-<li>MSPSWSDK-3211: Implemented new LCD SysConfig module for MSPM0L122x/L222x devices</li>
-<li>MSPSWSDK-3297: Fixed issue where the txBufNum struct member was not being set to the correct macro value</li>
-<li>MSPSWSDK-3331: Updated code generation with correct sequence for MCAN clock initialization</li>
-<li>MSPSWSDK-3439: Fixed code generation error for when Timer Capture mode was set to “multi”</li>
-<li>MSPSWSDK-2737: Updated the Keil QuickStart Guide and relevant code example READMEs with instructions on how to properly compile examples using FreeRTOS</li>
-</ul></li>
-<li>1.20.01.06
-<ul>
-<li>MSPSWSDK-3216:Fixed issue where the LFCLK monitor was not being correctly configured in DL_SYSCTL_setLFCLKSourceLFXT API</li>
-<li>MSPSWSDK-3243: Fixed incorrect value for DL_UART_ERROR_PARITY macro</li>
-<li>MSPSWSDK-3271: Fixed issue where DL_GPIO_setLowerPinsPolarity and DL_GPIO_setUpperPinsPolarity APIs were overwriting the previous configuration</li>
-<li>MSPSWSDK-3286 Fixed issue where DL_GPIO_setLowerPinsInputFilter and DL_GPIO_setUpperPinsInputFilter APIs were overwriting the previous configuration</li>
-<li>MSPSWSDK-3236: Fixed incorrect values for DL_SYSCTL_SHUTDOWN_STORAGE_BYTE for MSPM0C specific SYSCTL DriverLib</li>
-<li>MSPSWSDK-2680: Updated GCC linker and startup files to enable C++ virtual tables and constructors</li>
-<li>MSPSWSDK-3153: Implemented Energy Metrology Library and code example for reference design TIDA_010243</li>
-<li>MSPSWSDK-3222: Added support to handle Device Migration for non-SysConfig based applications</li>
-<li>MSPSWSDK-3205: Update MSPM0C code example to support Rev E3 of the LP-MSPM0C1104
-<ul>
-<li>LED1 moved from PA4 -&gt; PA22</li>
-<li>Removed inversion from LED1</li>
-</ul></li>
-<li>MSPSWSDK-3306: Added the following new subsystems:
-<ul>
-<li>can_to_uart_bridge</li>
-<li>can_to_i2c_controller_bridge</li>
-<li>can_to_i2c_target_bridge</li>
-<li>io_expander_uart</li>
-</ul></li>
-<li>MSPSWSDK-3267: Fixed mcan_single_message_tx to use a HFXT frequency of 48 MHz instead of 40 MHz</li>
-<li>MSPSWSDK-3218: Updated SMBus code examples to use I2C BoosterPack pins</li>
-<li>MSPSWSDK-3226: Added new code example empty_non_sysconfig which shows basic empty project using DriverLib, without SysConfig</li>
-<li>MSPSWSDK-3238: Updated LP-MSPM0C1104 Out of Box Experience to blink LED1 by default</li>
-<li>MSPSWSDK-3255: Renamed existing SMBus examples to *00_all_protocols. Added SMBus Host Alert for Controller and Target with corresponding examples</li>
-<li>MSPSWSDK-3287: Fixed some incorrect pins in the SMBus READMEs</li>
-<li>MSPSWSDK-3308: Fixed incorrect logic in Boot Image Manager causing higher primary slot to not get executed</li>
-<li>MSPSWSDK-3250: Updated the bsl_software_invoke example to demonstrate the updated sequence for the BSL_ERR_01 workaround</li>
-<li>MSPSWSDK-3309: Increased the HEAP size for the MSPM0L FreeRTOS examples</li>
-<li>MSPSWSDK-3044: Fixed FCC trig source mux not generating code for MSPM0C devices</li>
-<li>MSPSWSDK-3298: Fixed issue when enabling LFCLKEXT caused an error</li>
-<li>MSPSWSDK-3119: Moved the “Use Clock Tree” option to the top of the SYSCTL module to improve findability</li>
-<li>MSPSWSDK-3120: Updated the “Use Clock Tree” description</li>
-<li>MSPSWSDK-3264: Fixed incorrect code generation which was generating “FULL_CH_EVENT_EARLY_CHANNELx” rather than “DL_DMA_FULL_CH_EVENT_EARLY_CHANNELx”</li>
-<li>MSPSWSDK-3168: Added support to handle Device Migration within SysConfig for SysConfig-based applications</li>
-<li>MSPSWSDK-3141: Fixed code generation to remove “/* Configure DMA */&quot; artifact from some modules</li>
-<li>MSPSWSDK-3246: Fixed incorrect UART XDS MSPM0G3507 Launchpad pinning error</li>
-<li>MSPSWSDK-2997: Fixed incorrect code generation when setting any type of DMA trigger (RX or TX) would always define a TX trigger regardless of user selection</li>
-<li>MSPSWSDK-3284: Added option to disable Target’s own address</li>
-</ul></li>
-<li>MSPSWSDK-3215: Fixed bug forcing SMBUS pins to be outputs instead of inputs when pin configuration is selected
-<ul>
-<li>MSPSWSDK-2708: Fixed error when selecting “One-shot with 1s Period and Zero Event” profile</li>
-<li>MSPSWSDK-3036: Fixed code generation when calling DL_Timer_setCaptureCompareCtl would incorrectly have three parameters instead of four parameters</li>
-<li>MSPSWSDK-3224: Updated code generation to no longer generate the cross trigger when cross trigger is initialized unless start timer is also enabled</li>
-<li>MSPSWSDK-3094: Fixed incorrect code generation for TIMER Fault pin in configuration parameter of DL_GPIO_initPeripheralOutputFunctionFeatures</li>
-<li>MSPSWSDK-3031: Updated code generation to have correct clock configuration sequence of DL_SYSCTL_setULPCLKDivider and DL_SYSCTL_setFlashWaitState prior to DL_SYSCTL_setMCLKSource</li>
-<li>MSPSWSDK-3196: Fixed incorrect code generation when using HFXIN/HFXOUT</li>
-<li>MSPSWSDK-3251: Fixed incorrect code generation using the wrong function to initialize LFCLK_IN and HFCLK_IN pins</li>
-<li>MSPSWSDK-3128: Fixed an issue when configuring FCC through SysCtl, no pin resource was reserved</li>
-<li>MSPSWSDK-3246: Fixed pins associated with XDS110 UART hardware component for LP-MSPM0G3507 and LP-MSPM0L1306</li>
-<li>MSPSWSDK-3102: Implemented SPI TI Driver</li>
-<li>MSPSWSDK-3292: Updated CCS Theia IDE Guide to add section on DSSM Commands</li>
-<li>MSPSWSDK-2560: Added IOLink Overview document to the third party documentation</li>
-<li>MSPSWSDK-2560: Added Zephyr Overview document to the third party documentation</li>
-</ul></li>
-<li>1.20.00.05
-<ul>
-<li>MSPSWSDK-3173: Added empty examples for all device spins. This includes all devices for the following device families:
-<ul>
-<li>MSPM0L11xx/L13xx</li>
-<li>MSPM0G1x0x/G3x0x</li>
-<li>MSPM0C110x</li>
-<li>MSPS003FX</li>
-</ul></li>
-<li>MSPSWSDK-3064: Update boot_manager projects to use updated .cmd file that includes .bcr_config and .bsl_config sections</li>
-<li>MSPSWSDK-2437: Added Smart Analog Sensor Interface (SASI) smoke detector to the SDK</li>
-<li>MSPSWSDK-2556: Added SENT Library to the SDK</li>
-<li>MSPSWSDK-3061: Optimized boot_manager examples to have smaller footprint</li>
-<li>MSPSWSDK-3077: Fixed issue with lcd_single_port and lcd_multi_port examples where Start Timer was not enabled, and the Zero Event Interrupt was not enabled</li>
-<li>MSPSWSDK-3082: Added support for lcd_single_port example to MSPM0L11xx/L13xx</li>
-<li>MSPSWSDK-3104: Updated naming of “Cookbook” to “MCU Subsystems”</li>
-<li>MSPSWSDK-3081: Updated adc_dma_ping_pong subsystem with improvements, and added support for MSPM0G1x0x/G3x0x.</li>
-<li>MSPSWSDK-3081 Added i2c_to_uart_bridge subsystem</li>
-<li>MSPSWSDK-3145: Updated CAN BSL Plugin examples with SysConfig support</li>
-<li>MSPSWSDK-3151: Updated Hall Sensored Trap BLDC Motor Control Library with the following:
-<ul>
-<li>Added examples with MSPM0G1x0x/G3x0x + different driver boards (DRV8311/8300/8317/8323/8328/8353)</li>
-<li>Added example with MSPM0L11xx/L13xx + DRV8329</li>
-<li>Added solution for TIDA-010251 brushless DC motor inverter reference design</li>
-</ul></li>
-<li>MSPSWSDK-3152: Updated Sensorless FOC BLDC Motor Control Library with the following:
-<ul>
-<li>Added IPD and slow first cycle startup methods and static direction reversal</li>
-<li>Automated open to closed loop transition</li>
-<li>Added support for user parameter saving in FLASH and higher PWM frequency support till 50kHz</li>
-</ul></li>
-<li>MSPSWSDK-3174: Renamed the following SPI examples to reduce file name length:
-<ul>
-<li>spi_controller_repeated_multibyte_fifo_dma_interrupts -&gt; spi_controller_repeated_fifo_dma_interrupts</li>
-<li>spi_peripheral_repeated_multibyte_fifo_dma_interrupts -&gt; spi_peripheral_repeated_fifo_dma_interrupts</li>
-<li>spi_controller_multibyte_fifo_dma_interrupts -&gt; spi_controller_fifo_dma_interrupts</li>
-<li>spi_peripheral_multibyte_fifo_dma_interrupts -&gt; spi_peripheral_fifo_dma_interrupts</li>
-</ul></li>
-<li>MSPSWSDK-3164: Increased stack size of boot_manager examples</li>
-<li>MSPSWSDK-2536: Updated DL_FlashCTL_massEraseMultiBank API to correctly handle multi bank erasure</li>
-<li>MSPSWSDK-3100: Fixed issue with DL_FlashCTL_protectSector API not masking correctly for CMDWEPROTA</li>
-<li>MSPSWSDK-3154: Fixed issue where the values of DL_SPI_CD_MODE_DATA and DL_SPI_CD_MODE_COMMAND defines where not properly shifted when being passed into DL_SPI_setControllerCommandDataModeConfig API</li>
-<li>MSPSWSDK-3046: Updated dl_factoryregion.h APIs, along with other TRIM region accesses, to disable and then re-enable cache before and after TRIM access.</li>
-<li>MSPSWSDK-3093: Added missing generic DL_TIMER_INTERRUPT/EVENT defines to dl_timer.h. Added missing DL_TIMERG_INTERRUPT/EVENT defines related to TIMG instance with 4 channels.</li>
-<li>MSPSWSDK-3017: Updated documentation for DL_MathACL_configOperation API to clarify behavior</li>
-<li>MSPSWSDK-3050: Fixed some MSPM0L11xx/L13xx startup files where GROUP1_IRQHandler was incorrectly listed as GPIOA_IRQHandler</li>
-<li>MSPSWSDK-3135: Renamed APIs to fix typos in original names:
-<ul>
-<li>DL_FactoryRegion_getBSLPinInvokeGPIOPModule -&gt; DL_FactoryRegion_getBSLPinInvokeGPIOPModule</li>
-<li>DL_FactoryRegion_getBSLPinInvokeGPIOPModulePad -&gt; DL_FactoryRegion_getBSLPinInvokeGPIOModulePad</li>
-</ul></li>
-<li>MSPSWSDK-3138: Updated DL_Timer_configQEI to not start the timer counter by default</li>
-<li>MSPSWSDK-3188: Updated return type of DL_SYSCTL_getBeeperFreq from DL_SYSCTL_SYSOSC_FREQ -&gt; DL_SYSCTL_BEEPER_FREQ</li>
-<li>MSPSWSDK-2990: Fixed issue where package views of VSSOP and SOT packages looked like a QFN package on Device View</li>
-<li>MSPSWSDK-3093: Updated code generation to use timer flavor specific defines in code generation in Timer modules</li>
-<li>MSPSWSDK-2414: Added support for Hall Input Mode to Timer QEI module</li>
-<li>MSPSWSDK-3080: Updated the display names of the QEI Counter Compare pins to be consistent with other Timer modules in Timer QEI module</li>
-<li>MSPSWSDK-2732: Added support for Repeat Counter Enable and Load Value in Timer PWM module</li>
-<li>MSPSWSDK-2736: Added descriptions to clarify Pad Number and Mux in NONMAIN Configurator</li>
-<li>MSPSWSDK-2416: Added option to configure transfer size to DMA module</li>
-<li>MSPSWSDK-3039: Added support for multiple functionality pads, including the MSPM0L11xx/L13xx RTR package</li>
-<li>MSPSWSDK-3159: Fixed error case when selecting same channel as event subscriber &amp; publisher for same instance</li>
-<li>MSPSWSDK-3162: Updated display name of “NONMAIN” to “Configuration NVM”. Added warning requiring user to accept the risk of updating NONMAIN memory.</li>
-<li>MSPSWSDK-3088: Removed NRST pin from being included in as an unused pin in the Configure Unused Pins option</li>
-<li>MSPSWSDK-3134: Updated DMA module to no longer displays number of max instances, fixes error case when switching devices</li>
-<li>MSPSWSDK-3110: Updated SYSCTL module to combine “Internal Oscillators” and “External Oscillators” sections into a single “Oscillators” section</li>
-<li>MSPSWSDK-3112: Updated Clock Tree “External/FCC” display name to “Clock Output and FCC”</li>
-<li>MSPSWSDK-3184: Updated references of “DSSM GUI Tool” to new name of “MSPM0 Factory Reset Tool”</li>
-<li>MSPSWSDK-3185: Fixed broken links in Chinese documents</li>
-</ul></li>
-<li>1.10.01.05
-<ul>
-<li>MSPSWSDK-2699: Fixed incorrect CRC calculation and M0G-specific ECC errors for flashctl_nonmain_memory_write</li>
-<li>MSPSWSDK-2724: Updated bim_sample_image example to include README.html</li>
-<li>MSPSWSDK-2758: Integrated more subsystems to SDK</li>
-<li>MSPSWSDK-2943: Updated descriptions in uart_rs485 READMEs to include setup information</li>
-<li>MSPSWSDK-2973: Updated blood_pressure_monitor and pulse_oximeter READMEs with timeline updates</li>
-<li>MSPSWSDK-2987: Added new external LCD demos to SDK</li>
-<li>MSPSWSDK-2988: Added PIR motion detection demo to SDK</li>
-<li>MSPSWSDK-3000: Added battery gauge solution to the SDK</li>
-<li>MSPSWSDK-3001: Added BSL CAN Host into SDK</li>
-<li>MSPSWSDK-2910: Fixed issue with DL_SYSCTL_switchMCLKfromSYSOSCtoLFCLK() API not correctly switching to LFCLK in the case when disabling SYSOSC</li>
-<li>MSPSWSDK-2945: Fixed incorrect masking in the DL_SYSTICK_enable() API</li>
-<li>MSPSWSDK-2975: Fixed the value for DL_SYSCTL_MCLK_DIVIDER_8 enum in SYSCTL DriverLib</li>
-<li>MSPSWSDK-2397: Added new DriverLib APIs to disable SYSPLL and HFXT.</li>
-<li>MSPSWSDK-2719: Added update to allow all input pins to configure fast wake, and added a separate option to filter the pin selection to shutdownWake compatible pins</li>
-<li>MSPSWSDK-2985: Updated hysteresis option availability</li>
-<li>MSPSWSDK-2991: Removed case sensitivity on inputs</li>
-<li>MSPSWSDK-2920: Fixed code generation when using the DL_I2C_TARGET_INTERRUPT_OVERFLOW interrupt</li>
-<li>MSPSWSDK-2397: Added new option “Force Default Clock Configuration” in SysConfig that will disable the HFXT and SYSPLL as part of initial configuration</li>
-<li>MSPSWSDK-2984: Resolved error on dependency between SYSCTL CLK_OUT and Clock Tree</li>
-<li>MSPSWSDK-2986: Added info message if using LFXT</li>
-<li>MSPSWSDK-2757: Implemented ADC TI Driver</li>
-<li>MSPSWSDK-2723: Added TI Drivers API Guide to Document Overview</li>
-<li>MSPSWSDK-2733: Added new PMBus User Guide</li>
-<li>MSPSWSDK-2745: Added more translated documents</li>
-<li>MSPSWSDK-2753: Removed empty cookbook documentation from the SDK</li>
-</ul></li>
-<li>1.10.00.05
-<ul>
-<li>MSPSWSDK-2572: Added support for new Motor Control Sensorless FOC library</li>
-<li>MSPSWSDK-2597: Added support for new DALI library</li>
-<li>MSPSWSDK-2628: Added support for new PMBus library</li>
-<li>MSPSWSDK-2669: Added support to Boot Manager for MSPM0G</li>
-<li>MSPSWSDK-2616: Added several new Cookbook examples</li>
-<li>MSPSWSDK-695: Added DriverLib code example for UART IrDA</li>
-<li>MSPSWSDK-2621: Added DriverLib code example for UART RS-485</li>
-<li>MSPSWSDK-2070: Added DriverLib code example for adc12_internal_temp_sensor_mathacl DriverLib</li>
-<li>MSPSWSDK-2169: Added DriverLib code example for using Timer 32-bit counter</li>
-<li>MSPSWSDK-2409: Added DriverLib code example for basic C++</li>
-<li>MSPSWSDK-2614: Added DriverLib code example for ADC sequence conversion</li>
-<li>MSPSWSDK-1719: Added demo for MSPM0G Out of Box</li>
-<li>MSPSWSDK-2208: Added demo for BQ769x2 with I2C</li>
-<li>MSPSWSDK-2209: Added demo for smoke detector using TPS880x</li>
-<li>MSPSWSDK-2401: Added demo for Pulse Oximeter</li>
-<li>MSPSWSDK-2402: Added demo for Blood Pressure Monitor</li>
-<li>MSPSWSDK-2636: Added demo for one_wire protocol</li>
-<li>MSPSWSDK-2663: Added code example for SPI BSL Host Plugin</li>
-<li>MSPSWSDK-2691: Added code example for BSL CAN Plugin</li>
-<li>MSPSWSDK-2321: Added code examples for BSL Host</li>
-<li>MSPSWSDK-2693: Added missing READMEs to some BSL examples</li>
-<li>MSPSWSDK-2659: Updated I2C HW header file with new naming of I2C registers to Target/Controller</li>
-<li>MSPSWSDK-2172: Updated example documentation with correct switch naming for MSPM0G</li>
-<li>MSPSWSDK-2403: Updated adc12_max_freq_dma code example to reach ADC conversion frequency of 1.4Msps</li>
-<li>MSPSWSDK-2593: Updated MSPM0L examples to enable Clock Tree</li>
-<li>MSPSWSDK-2599: Updated lin_responder example to handle STOP manually after PID</li>
-<li>MSPSWSDK-2540: Updated SMBus library to replace SW PEC with HW PEC</li>
-<li>MSPSWSDK-2712: Updated spi_peripheral_repeated_multibyte_fifo_dma_interrupts code example to use same CS pin as the SPI controller</li>
-<li>MSPSWSDK-2382: Renamed bim folder in SDK to boot_manager</li>
-<li>MSPSWSDK-2454: Fixed TI Driver FreeRTOS examples including both NoRTOS and FreeRTOS DPL source code</li>
-<li>MSPSWSDK-2349: Fixed CLKSOURCE bit not being set by default</li>
-<li>MSPSWSDK-2586: Fixed bug in DL_FlashCTL_unprotectSector, which was preventing writes to memory &gt; 32kB</li>
-<li>MSPSWSDK-2592: Added missing <strong>MSPM0_HAS_ECC</strong> define back to MSPM0G device file</li>
-<li>MSPSWSDK-2603: Fixed incorrect mask being used in DL_COMP_getDACInputCode1, and renamed DL_COMP_getDACInputCode1 -&gt; DL_COMP_getDACCode1</li>
-<li>MSPSWSDK-2605: Added some missing generic DMA trigger define in some MSPM0G device headers</li>
-<li>MSPSWSDK-2335: Implemented new Factory Region DriverLib module</li>
-<li>MSPSWSDK-2411: Updated dl_dma.h Overview documentation</li>
-<li>MSPSWSDK-2534: Added APIs to MATHACL DriverLib with with functions to clear results</li>
-<li>MSPSWSDK-2547: Removed invalid configuration of GAIN = 0 for PGA modes from OPA DriverLib</li>
-<li>MSPSWSDK-2553: Removed Subscriber1 from DAC12 DriverLib</li>
-<li>MSPSWSDK-2587: Updated DriverLib modules to update references of INT_EVENT registers with new naming of CPU_INT, DMA_TRIG, and GEN_EVENT</li>
-<li>MSPSWSDK-2624: Updated GPIO DriverLib to add APIs for GPIO wakeup enable</li>
-<li>MSPSWSDK-2660: Updated SPI DriverLib to remove 32 bit data size support</li>
-<li>MSPSWSDK-2463: Added warning when using PA1 if muxed with NRST</li>
-<li>MSPSWSDK-2256: Added pin configuration options to analog &amp; digital SysConfig modules</li>
-<li>MSPSWSDK-2493: Fixed LFCLK frequency set as 32000 Hz, instead of 32768 Hz</li>
-<li>MSPSWSDK-2615: Fixed missing code generation for GPIO when EXCLK is enabled</li>
-<li>MSPSWSDK-2678: Fixed incorrect code generation for SYSPLL configuration</li>
-<li>MSPSWSDK-2553: Removed support for Subscriber1</li>
-<li>MSPSWSDK-2544: Fixed error when GPIO events were configured and the GPIO instances were removed</li>
-<li>MSPSWSDK-2673: Updated code generation to remove redundant code for initializing digital peripherals</li>
-<li>MSPSWSDK-2518: Fixed incorrect description for Actual Bus Speed</li>
-<li>MSPSWSDK-2677: Added warning when more than one filter is selected</li>
-<li>MSPSWSDK-2549: Updated MCAN RAM limit from 2kB to 1kB</li>
-<li>MSPSWSDK-2396: Added customizable BSL Flash plugin addresses</li>
-<li>MSPSWSDK-2448: Added quick profiles for common scenarios</li>
-<li>MSPSWSDK-2449: Updated descriptions to clarify between different debug access fields</li>
-<li>MSPSWSDK-2471: Fixed incorrect code generation for SPI Command Data GPIO pins defines when in SPI Peripheral mode</li>
-<li>MSPSWSDK-2601: Fixed missing code generation for SPI RX timeout</li>
-<li>MSPSWSDK-2461: Fixed missing code generation for Clock Interrupts</li>
-<li>MSPSWSDK-2497: Fixed FCC code generation being generated twice if FCC is enabled in SYSCTL and in Clock Tree. Moved SYSCTL FCC configuration to Clock Configuration group.</li>
-<li>MSPSWSDK-2600: Fixed issue where clock validation were still using SYSCTL, even though Clock Tree is enabled</li>
-<li>MSPSWSDK-2452: Added support for different count modes</li>
-<li>MSPSWSDK-2627: Fixed issue that allowed TIMG12 instance to have a prescaler different than 1</li>
-<li>MSPSWSDK-2682: Fixed incorrect code generation where edgeDetectMode parameter was not added to the initialization struct</li>
-<li>MSPSWSDK-2432: Fixed incorrect code generation where fault pin and port were not being defined</li>
-<li>MSPSWSDK-2423: Fixed incorrect code generation in Timer complementary output channels</li>
-<li>MSPSWSDK-2426: Fixed multiple capture compare values not being configured</li>
-<li>MSPSWSDK-2084: Removed cross trigger feature</li>
-<li>MSPSWSDK-2555: Added configuration to set the default load value</li>
-<li>MSPSWSDK-2453: Added support for IrDA</li>
-<li>MSPSWSDK-2347: Implemented new GPIO TI Driver</li>
-<li>MSPSWSDK-2381: Implemented new UART TI Driver</li>
-<li>MSPSWSDK-2561: Implemented new I2C TI Driver</li>
-<li>MSPSWSDK-2324: Updated Migration Guide with compatibility break on Flash Loader settings</li>
-<li>MSPSWSDK-2362: Updated CCS Guides explaining how to use objcopy</li>
-<li>MSPSWSDK-2468: Updated CCS User’s Guide explaining how to run from SRAM</li>
-<li>MSPSWSDK-2483: Updated SysConfig Guide explaining how to override WEAK functions</li>
-<li>MSPSWSDK-2539: Updated CCS Guides with instructions on installing GCC</li>
-<li>MSPSWSDK-2564: Updated Tools Guide with new section for DSSM GUI tool</li>
-<li>MSPSWSDK-2573: Updated documentation to reference TI Developer Zone</li>
-<li>MSPSWSDK-2623: Updated Known Issues document to remove issue about building a .syscfg project in IAR throwing an error</li>
-<li>MSPSWSDK-2638: Updated Known Issues document to remove issue about CMSIS Pack MSPM0G support</li>
-<li>MSPSWSDK-2639: Updated Segger J-Link Guide with recommended software version of J-Link Software pack v7.88i</li>
-<li>MSPSWSDK-2634: Updated documentation with recommended software version of TIClang 2.1.3LTS</li>
-<li>MSPSWSDK-2640: Updated Segger J-Link Guide to remove note on hidden devices</li>
-<li>MSPSWSDK-2642: Updated Segger J-Link Guide with note that CCS must be restarted for Segger J-Link plugins to properly update</li>
-<li>MSPSWSDK-2643: Updated documentation with recommended software version of IAR 9.40.1</li>
-<li>MSPSWSDK-2644: Updated Segger J-Link Guide with note on using Intel HEX</li>
-<li>MSPSWSDK-2645: Added more translated documents in Chinese</li>
-<li>MSPSWSDK-2672: Updated EEPROM User Guide to include the Application Note link for EEPROM Type B</li>
-</ul></li>
-<li>1.00.01.03
-<ul>
-<li>MSPSWSDK-2404: Updated incorrect description in timg_qei_mode example README</li>
-<li>MSPSWSDK-2419: Updated outdated description in uart_echo example README</li>
-<li>MSPSWSDK-2440: Added new DriverLib example gpio_simultaneous_interrupts</li>
-<li>MSPSWSDK-2511: Updated tima_timer_mode_pwm_dead_band example to use complementary output feature</li>
-<li>MSPSWSDK-2513: Updated outdated description in tima_trigger_fail_mechanism example README</li>
-<li>MSPSWSDK-2464: Fixed MSPM0L TI Driver examples incorrectly including both the MSPM0L and MSPM0G DriverLib</li>
-<li>MSPSWSDK-1861: Added APIs to AES DriverLib to set and get KEYWR and DINWR registers</li>
-<li>MSPSWSDK-2340: Added APIs to UART DriverLib to set and get CLKDIV2 register</li>
-<li>MSPSWSDK-2400: Updated some APIs in AES DriverLib for MISRA-C compliance</li>
-<li>MSPSWSDK-2521: Updated implementation of DL_Timer_initCaptureCombinedMode API</li>
-<li>MSPSWSDK-2330: Added missing Address Match interrupt for UART Extend mode to dl_uart_extend.h</li>
-<li>MSPSWSDK-2352: Updated the ifdefs in the SYSCTL DriverLib .c files to use generic device defines</li>
-<li>MSPSWSDK-2410: Added missing CPP safeguard in the dl_opa.h file</li>
-<li>MSPSWSDK-2425: Updated some DriverLib AES APIs to check key has proper 32-bit alignment</li>
-<li>MSPSWSDK-2429: Fixed incorrect parameter in DL_Timer_overrideCCPOut API from DL_TIMER_FORCE_OUT -&gt; DL_TIMER_FORCE_CMPL_OUT</li>
-<li>MSPSWSDK-2486: Fixed incorrect mask used in the DL_Timer_set/getCaptCompUpdateMethod APIs</li>
-<li>MSPSWSDK-1798: Updated SysConfig to filter out standard drive GPIOs when routing a high frequency clock to CLK_OUT</li>
-<li>MSPSWSDK-2366: Fixed incorrect configuration in a quick profile</li>
-<li>MSPSWSDK-2533: Updated display units for LFCLK_IN input frequency</li>
-<li>MSPSWSDK-2455: Updated bit timing parameter calculations</li>
-<li>MSPSWSDK-2487: Updated arbitration bit rate from 999kbps to 1Msps</li>
-<li>MSPSWSDK-2332: Fixed incorrect SPI clock frequency range</li>
-<li>MSPSWSDK-2469: Added missing configuration for SPI Command Data (CD) mode</li>
-<li>MSPSWSDK-2472: Fixed missing GPIO initialization for the Command Data (CD) pin when in Motorola 3-wire mode and enabling CD mode</li>
-<li>MSPSWSDK-2301: Fixed incorrect initialization order in the code generation when MFCLK is sourced from HSCLK</li>
-<li>MSPSWSDK-2522: Fixed incorrect API being called when combined mode is selected</li>
-<li>MSPSWSDK-2363: Added support for second capture compare configuration</li>
-<li>MSPSWSDK-2427: Updated dead band configuration</li>
-<li>MSPSWSDK-2420: Fixed incorrect instance name in the code generation when adding an event</li>
-</ul></li>
-<li>1.00.00.04
-<ul>
-<li>Initial release</li>
-</ul></li>
-</ul>
-<h3 id="upgrade-and-compatibility">Upgrade and Compatibility</h3>
-<ul>
-<li>1.30.00.03
-<ul>
-<li>MSPSWSDK-3394: Updated dl_sysctl_mspm0c110x.h to remove BOR Threshold options to match actual device specs for MSPM0C110x. Only BOR Threshold Level 0 (DL_SYSCTL_BOR_THRESHOLD_LEVEL_0) is available.</li>
-<li>MSPSWSDK-3454: Previous SysConfig projects using LaunchPad configuration for MSPM0G1X0X_G3X0x or MSPM0L122X_222X may lead to an error on Pinmux Configuration pin selection.
-<ul>
-<li>User should remove the error lines in which the pin value is assigned to an expansion pin, in the format “pin.$assign = expansion#”</li>
-</ul></li>
-</ul></li>
-<li>1.20.01.06:
-<ul>
-<li>MSPSWSDK-3215:
-<ul>
-<li>In SysConfig SMBus module, the generated code for the direction in the Pin Configuration was incorrect. The available configuration options have been updated to match. User should follow on screen instructions for conflict management.</li>
-</ul></li>
-</ul></li>
-<li>1.20.00.05
-<ul>
-<li>MSPSWSDK-3135:
-<ul>
-<li>Renamed APIs DL_FactoryRegion_getBSLPinInvokeGPIOPModule -&gt; DL_FactoryRegion_getBSLPinInvokeGPIOPModule</li>
-<li>Renamed DL_FactoryRegion_getBSLPinInvokeGPIOPModulePad -&gt; DL_FactoryRegion_getBSLPinInvokeGPIOModulePad</li>
-</ul></li>
-<li>MSPSWSDK-3162:
-<ul>
-<li>All earlier NONMAIN configurations will fail until the user acknowledges / checks the new field. This is intentional behavior to prevent erroneous configuration.</li>
-</ul></li>
-</ul></li>
-<li>1.10.01.05
-<ul>
-<li>MSPSWSDK-2719: GPIO filtering options now correctly match available device features, some previously accepted tool configurations may no longer be valid.</li>
-</ul></li>
-<li>1.10.00.05
-<ul>
-<li>MSPSWSDK-2256: In SysConfig, pin configuration options were added to digital and analog peripherals
-<ul>
-<li>If including the SPI peripheral, this might lead to an error when loading a .syscfg file related to the SPI Pin Configuration.
-<ul>
-<li>To update manually, remove the lines from .syscfg file that include the [pinName]Config.$name code</li>
-</ul></li>
-</ul></li>
-<li>MSPSWSDK-2627: In SysConfig, prescale validation for Timer Peripherals was not being properly triggered
-<ul>
-<li>Previous configurations may fall outside accepted range, user should follow instructions from error message and choose an appropriate updated value.</li>
-</ul></li>
-<li>MPSWSDK-2549: In SysConfig, updated MCAN RAM limit from 2kB to 1kB
-<ul>
-<li>If previous configuration gives an error, select a new set of valid parameters as described on error message</li>
-</ul></li>
-<li>MSPSWSDK-2600: In SysConfig, added Clock Tree validation for MFPCLK/DAC12 validation
-<ul>
-<li>Follow instructions on error message to enable required clock configurations.</li>
-</ul></li>
-<li>MSPSWSDK-2637: In SysConfig, added validation for ADC/VREF Clock configuration.
-<ul>
-<li>Follow instructions on error message to enable required clock configurations.</li>
-</ul></li>
-<li>MSPSWSDK-2600: Support for SPI 32-bit data size was removed
-<ul>
-<li>In dl_spi.h, DL_SPI_DATA_SIZE_32 was removed</li>
-<li>In SysConfig, dataSize parameter no longer supports a value of ‘32’
-<ul>
-<li>To update manually in .syscfg file, choose a supported value for dataSize parameter</li>
-</ul></li>
-</ul></li>
-<li>MSPSWSDK-2553: Support for Subscriber1 was removed
-<ul>
-<li>In dl_dac12.h, DL_DAC12_FIFO_TRIGGER_HWTRIG1 was removed</li>
-<li>In SysConfig, sub1ChanID parameter was set to readOnly and cannot be modified
-<ul>
-<li>To update manually in .syscfg file, remove sub1ChanID parameter, and use Subscriber0 instead</li>
-</ul></li>
-</ul></li>
-<li>MSPSWSDK-2603:
-<ul>
-<li>RDL_COMP_getDACInputCode1() was renamed to DL_COMP_getDACCode1()</li>
-</ul></li>
-<li>MSPSWSDK-2396: Customizable BSL flash plugin addresses have been added to the SysConfig NONMAIN Configurator
-<ul>
-<li>When importing a .syscfg file that is using the NONMAIN Configurator, use the SysConfig tool to update the BSL flash plugin addresses to match the addresses in the linker file. See the SDK BSL Flash Plugin examples for more details.</li>
-</ul></li>
-</ul></li>
-<li>1.00.01.03
-<ul>
-<li>MSPSWSDK-2429: Fixed incorrect parameter in DL_Timer_overrideCCPOut API from DL_TIMER_FORCE_OUT -&gt; DL_TIMER_FORCE_CMPL_OUT</li>
-<li>MSPSWSDK-2365:
-<ul>
-<li>“startAdd_single” option was removed from SysConfig ADC module
-<ul>
-<li>To update manually, replace “startAdd_single” field in .syscfg file with “startAdd”</li>
-</ul></li>
-<li>“lowPowerSequence” profile was removed from SysConfig ADC module for MSPM0L devices
-<ul>
-<li>This profile is no longer available for MSPM0L devices, user must select a different available profile</li>
-</ul></li>
-</ul></li>
-<li>MSPSWSDK-2455:
-<ul>
-<li>“bus_lenght” and “extra_prop_delay” fields were removed from SysConfig MCAN module
-<ul>
-<li>These options are no longer available in SysConfig, and should be manually removed from .syscfg file</li>
-<li>Bit Timing Parameters calculation &amp; validation updated, some earlier configurations may no longer be valid. Use the SysConfig tool and select valid configuration parameters. If receiving any calculation errors, follow recommendations on validation messages</li>
-</ul></li>
-</ul></li>
-<li>MSPSWSDK-2084:
-<ul>
-<li>Cross trigger functionality is no longer configurable in the SysConfig QEI module
-<ul>
-<li>This functionality is no longer available in SysConfig, and the user will receive a warning if using a .syscfg file with this feature enabled. To update manually, remove the “crossTriggerEn” field from the .syscfg file.</li>
-</ul></li>
-</ul></li>
-<li>MSPSWSDK- 1798:
-<ul>
-<li>Configuring CLK_OUT pin outside its frequency range will lead to an error in the SysConfig SYSCTL module
-<ul>
-<li>If a .syscfg file has an invalid configuration, the user will receive an error and will need to update their configuration to a valid pin selection.</li>
-</ul></li>
-</ul></li>
-<li>MSPSWSDK-2327:
-<ul>
-<li>The dead band configuration was updated and the “dbChannelSelect” field was removed from the SysConfig PWM module
-<ul>
-<li>This option is no longer available in SysConfig, and should be manually removed from .syscfg file. The user will then need to configure the dead band by selecting the desired complementary channels.</li>
-</ul></li>
-</ul></li>
-</ul></li>
-<li>1.00.00.04
-<ul>
-<li>Initial release</li>
 </ul></li>
 </ul>
 <h2 id="versioning">Versioning</h2>
