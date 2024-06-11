@@ -38,9 +38,9 @@ MEMORY
 {
     FLASH           	    (RX)  : origin = 0x00000000, length = 0x0001FC00
     FLASH_USER_CONFIG		(RW)  : origin = 0x0001FC00, length = 0x00000400 /* 1KB Reserved for saving user confgiurations */
-	SRAM_SHADOW     	    (RW)  : origin = 0x20200000, length = 0x000B44   /* Reserved 200Bytes for User Input registers, 120Bytes for User Ctrl registers,
+	SRAM_SHADOW     	    (RW)  : origin = 0x20200000, length = 0x00000FFF /* Reserved 200Bytes for User Input registers, 120Bytes for User Ctrl registers,
 																			    2048 Bytes for Application Library Variables, 512 Bytes for Application Interface */
-    SRAM                    (RWX) : origin = 0x20200B44, length = 0x074BE
+    SRAM                    (RWX) : origin = 0x20201000, length = 0x00007000
 }
 
 SECTIONS

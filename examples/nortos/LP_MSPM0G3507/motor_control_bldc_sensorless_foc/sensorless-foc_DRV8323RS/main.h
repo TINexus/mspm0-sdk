@@ -45,7 +45,7 @@ extern "C" {
 /*! @brief Application Major FW Version */
 #define APP_MAJOR_VER  (0x02)
 /*! @brief Application Minor FW Version */
-#define APP_MINOR_VER  (0x00)
+#define APP_MINOR_VER  (0x01)
 /*! @brief Application Patch FW Version */
 #define APP_PATCH_VER  (0x00)
 /*! @brief Application FW Version */
@@ -72,7 +72,10 @@ extern "C" {
 #define APP_USER_STATUS_BASE        0x20200430UL
 
 /*! @brief FW Version address base */
-#define APP_FW_VER_BASE             0x20200B40UL
+#define APP_SHADOW_END             0x20200F00UL
+
+/*! @brief FW Version address base */
+#define APP_FW_VER_BASE             0x20200FFCUL
 
 #ifdef DRV8329
 

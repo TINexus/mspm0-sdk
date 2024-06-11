@@ -226,6 +226,12 @@ void appInputReset(void)
         __BKPT(0);
     }
 
+    if((g_pMC_App + getMCAppSize()) > APP_SHADOW_END)
+    {
+        /* MC App size limit exceeded */
+        __BKPT(0);
+    }
+
     memset(g_pAppInterface, 0, sizeof(APP_INTERFACE_T));
 
     memset (pUserCtrlRegs, 0, sizeof(USER_CTRL_INTERFACE_T));

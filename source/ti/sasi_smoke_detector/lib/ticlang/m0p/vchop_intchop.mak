@@ -10,7 +10,7 @@ NAME = vchop_intchop
 OBJ_DIR = ../../../obj/ticlang/m0p/vchop_intchop
 SRC_DIR = ../../../driver
 
-CFLAGS = -I$(TICLANG_ARMCOMPILER)/include "-I$(SDK_INSTALL_DIR)/source/third_party/CMSIS/Core/Include" "-I$(SDK_INSTALL_DIR)/source" -mcpu=cortex-m0plus -march=armv6-m -mtune=cortex-m0plus -mthumb -mfloat-abi=soft -Ofast -D__MSPM0L1306__ -DONE_PULSE_INT -DVCHOP_INTCHOP -c -g -gdwarf-3
+CFLAGS = -I$(TICLANG_ARMCOMPILER)/include "-I$(SDK_INSTALL_DIR)/source/third_party/CMSIS/Core/Include" "-I$(SDK_INSTALL_DIR)/source" -mcpu=cortex-m0plus -march=armv6-m -mtune=cortex-m0plus -mthumb -mfloat-abi=soft -Ofast -D__MSPM0L1306__ -DONE_PULSE_INT -DVCHOP_INTCHOP -c
 AFLAGS = rc
 ASMFLAGS = -I$(TICLANG_ARMCOMPILER)/include 
 

@@ -571,8 +571,10 @@ typedef struct
     currLoopDis:           1,
     /*! statusUpdate Flag */
     statusUpdateEn:        1,
+    /*! Update configurations Flag */
+    updateConfigs:         1,
     /*! Reserved */
-    reserved1:             4;
+    reserved1:             3;
 }ramAlgoDebugCtrl2;
 
 /*! @brief ALGO_DEBUG_2 register */

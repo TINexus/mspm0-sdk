@@ -54,9 +54,9 @@ int main(void)
 {
     SYSCFG_DL_init();
 
-    appReset(g_pMC_App); /* Reset all the Application Data variables to Zero */
-
     appInputReset(); /* Reset all the Application Input variables to Zero. */
+
+    appReset(g_pMC_App); /* Reset all the Application Data variables to Zero */
 
     userInputsInit(); /* Initialize the Default Motor Parameters */
 
